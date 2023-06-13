@@ -2,7 +2,7 @@
 require_once "Config/session.php";
 require_once "Config/Connection.php";
 
-if(isset($_SESSION,$_SESSION['acce_document']) and $_SESSION['auth']=='OK')
+if(isset($_SESSION,$_SESSION['acce_documento']) and $_SESSION['auth']=='OK')
 {
     require_once "Config/FrontController.php";
     
@@ -17,7 +17,7 @@ if(isset($_SESSION,$_SESSION['acce_document']) and $_SESSION['auth']=='OK')
     
     $FrontController=new FrontController($route);
 }
-else if(isset($_POST['email'],$_POST['password']))
+else if(isset($_POST['usuario'],$_POST['password']))
 {
     require_once "Controllers/AccessController.php";
     $AccessController=new AccessController();

@@ -1,210 +1,398 @@
---Tabla Titulo de Empleado
-
-CREATE TABLE public.employees_title(
-Emti_Id SERIAL, -- Id de la tabla
-Emti_Name VARCHAR(50),--nombre del cargo
-Emti_Description VARCHAR(200), --descripcion del cargo
-CONSTRAINT nn_Emti_Name CHECK (Emti_Name IS NOT NULL), 
-CONSTRAINT uc_Emti_Name UNIQUE (Emti_Name),
-CONSTRAINT nn_Emti_Description CHECK (Emti_Description IS NOT NULL),
-CONSTRAINT pk_employees_title PRIMARY KEY (Emti_Id)
+CREATE TABLE distribuidora.pais(
+	COD_PAIS VARCHAR(10),
+	NOMBRE_PAIS VARCHAR(20) NOT NULL,
+	CONSTRAINT PK_COD_PAIS PRIMARY KEY(COD_PAIS),
+	CONSTRAINT UC_NOMBRE_PAIS UNIQUE(NOMBRE_PAIS)
+);
+CREATE TABLE distribuidora.DEPARTAMENTO(
+	COD_DEPARTAMENTO VARCHAR(10),
+	NOMBRE_DEPARTAMENTO VARCHAR(30) NOT NULL,
+	COD_PAIS VARCHAR(10),
+	CONSTRAINT FK_COD_PAIS FOREIGN KEY (COD_PAIS) REFERENCES distribuidora.PAIS(COD_PAIS),
+	CONSTRAINT PK_COD_DEPARTAMENTO PRIMARY KEY(COD_PAIS, COD_DEPARTAMENTO),
+	CONSTRAINT UC_NOMBRE_DEPARTAMENTO UNIQUE(NOMBRE_DEPARTAMENTO)
+);
+CREATE TABLE distribuidora.CIUDAD(
+	COD_CIUDAD VARCHAR(10),
+	NOMBRE_CIUDAD VARCHAR(30) NOT NULL,
+	COD_PAIS VARCHAR(10),
+	COD_DEPARTAMENTO VARCHAR(10),
+	CONSTRAINT FK_COD_PAIS_DEPARTAMENTO FOREIGN KEY(COD_PAIS, COD_DEPARTAMENTO) REFERENCES distribuidora.DEPARTAMENTO(COD_PAIS, COD_DEPARTAMENTO),
+	CONSTRAINT PK_COD_CIUDAD PRIMARY KEY(COD_PAIS, COD_DEPARTAMENTO, COD_CIUDAD)
+);
+CREATE TABLE distribuidora.proveedor (
+	NIT VARCHAR(20),
+	NOMBRE VARCHAR (80),
+	DIRECCION VARCHAR(40),
+	CELULAR VARCHAR(15),
+	COD_PAIS VARCHAR(10),
+	COD_DEPARTAMENTO VARCHAR(10),
+	COD_CIUDAD VARCHAR(10),
+	CONSTRAINT NN_NOMBRE CHECK (NOMBRE IS NOT NULL),
+	CONSTRAINT NN_CELULAR CHECK (CELULAR IS NOT NULL),
+	CONSTRAINT NN_DIRECCION CHECK (DIRECCION IS NOT NULL),
+	CONSTRAINT FK_CIUDAD_PROVEEDOR FOREIGN KEY (COD_PAIS, COD_DEPARTAMENTO, COD_CIUDAD) REFERENCES distribuidora.CIUDAD(COD_PAIS, COD_DEPARTAMENTO, COD_CIUDAD),
+	CONSTRAINT PK_PROVEEDOR PRIMARY KEY(NIT)
+);
+CREATE TABLE distribuidora.CLIENTE (
+	CLIE_DOCUMENTO VARCHAR(15),
+	CLIE_NOMBRE1 VARCHAR(15),
+	CLIE_NOMBRE2 VARCHAR(15),
+	CLIE_APELLIDO1 VARCHAR(15),
+	CLIE_APELLIDO2 VARCHAR(15),
+	CLIE_DIRECCION VARCHAR(50),
+	CLIE_SEXO CHAR(1),
+	CLIE_CELULAR VARCHAR(20),
+	CLIE_EMAIL VARCHAR(30),
+	COD_PAIS VARCHAR(10),
+	COD_DEPARTAMENTO VARCHAR(10),
+	COD_CIUDAD VARCHAR(10),
+	CONSTRAINT CK_SEXO CHECK (CLIE_SEXO IN ('M', 'F')),
+	CONSTRAINT NN_NOMBRE1 CHECK (CLIE_NOMBRE1 IS NOT NULL),
+	CONSTRAINT NN_APELLIDO1 CHECK (CLIE_APELLIDO1 IS NOT NULL),
+	CONSTRAINT NN_CELULAR CHECK (CLIE_CELULAR IS NOT NULL),
+	CONSTRAINT NN_DIRECCION CHECK (CLIE_DIRECCION IS NOT NULL),
+	CONSTRAINT FK_CIUDAD_CLIENTE FOREIGN KEY (COD_PAIS, COD_DEPARTAMENTO, COD_CIUDAD) REFERENCES distribuidora.CIUDAD(COD_PAIS, COD_DEPARTAMENTO, COD_CIUDAD),
+	CONSTRAINT PK_CLIENTE PRIMARY KEY (CLIE_DOCUMENTO)
+);
+CREATE TABLE distribuidora.tipo_empleado (
+	tipo_id VARCHAR (2),
+	tipo_nombre VARCHAR (20),
+	CONSTRAINT NN_TIPO_NOMBRE CHECK (TIPO_NOMBRE IS NOT NULL),
+	CONSTRAINT PK_TIPO_EMPLEADO PRIMARY KEY (tipo_id)
 );
 
-SELECT * FROM public.employees_title;
+INSERT INTO distribuidora.tipo_empleado (tipo_id,tipo_nombre)
+								VALUES 	('A0','ADMINISTRADOR'),
+										('A1','GERENTE');
 
-INSERT INTO public.employees_title(emti_id, emti_name, emti_description)
-VALUES (default, 'ADMINISTRADOR', 'ENCARGADO DE LA ORGANIZACIÓN, DIRECCIÓN Y CONTROL DE LA EMPRESA');
-INSERT INTO public.employees_title(emti_id, emti_name, emti_description)
-VALUES (default, 'GERENTE', 'ENCARGADO DEL NEGOCIO');
-INSERT INTO public.employees_title(emti_id, emti_name, emti_description)
-VALUES (default, 'BODEGUERO', 'ENCARGADO DE LA PARTE DEL INVENTARIO');
-INSERT INTO public.employees_title(emti_id, emti_name, emti_description)
-VALUES (default, 'VENDEDOR', 'NO HACE NADA');
-
-
-
---Tabla Usuario
-
-CREATE TABLE public.access(
-Acce_Document VARCHAR(20),
-Acce_Name1 VARCHAR(30),--nombres
-Acce_Name2 VARCHAR(30),
-Acce_Lastname1 VARCHAR(30),--apellidos
-Acce_Lastname2 VARCHAR(30),
-Acce_Address VARCHAR(50),--direccion
-Acce_Sex CHAR(1),--sexo
-Acce_Telephone_Number VARCHAR(20),--numero de telefono
-Acce_Email VARCHAR(30),
-Acce_Password VARCHAR(250),
-Acce_State CHAR(2),--estado del empleado 
-Emti_Id INTEGER, --llave foranea de la tabla de cargo de empleado
-CONSTRAINT ck_Acce_Sex CHECK (Acce_Sex IN ('M','F','I')),
-CONSTRAINT nn_Acce_Sex CHECK (Acce_Sex IS NOT NULL),
-CONSTRAINT nn_Acce_Document CHECK (Acce_Document IS NOT NULL),
-CONSTRAINT nn_Acce_Name1 CHECK (Acce_Name1 IS NOT NULL),
-CONSTRAINT nn_Acce_Lastname1 CHECK (Acce_Lastname1 IS NOT NULL),
-CONSTRAINT nn_Acce_Telephone_Number CHECK (Acce_Telephone_Number IS NOT NULL),
-CONSTRAINT nn_Acce_Email CHECK (Acce_Email IS NOT NULL),
-CONSTRAINT nn_Acce_Password CHECK (Acce_Password IS NOT NULL),
-CONSTRAINT nn_Acce_State CHECK (Acce_State IS NOT NULL),
-CONSTRAINT fk_employees_title_access FOREIGN KEY (Emti_Id) 
-REFERENCES public.employees_title (Emti_Id),
-CONSTRAINT pk_access PRIMARY KEY (Acce_Document)
+CREATE TABLE distribuidora.empleado (
+	EMP_DOCUMENTO VARCHAR(15),
+	EMP_CODIGO VARCHAR (3),
+	EMP_NOMBRE1 VARCHAR(15),
+	EMP_NOMBRE2 VARCHAR(15),
+	EMP_APELLIDO1 VARCHAR(15),
+	EMP_APELLIDO2 VARCHAR(15),
+	EMP_DIRECCION VARCHAR(50),
+	EMP_SEXO CHAR(1),
+	EMP_CELULAR VARCHAR(20),
+	EMP_EMAIL VARCHAR(30),
+	TIPO_ID VARCHAR (2),
+	CONSTRAINT CK_SEXO CHECK (EMP_SEXO IN ('M', 'F')),
+	CONSTRAINT NN_NOMBRE1 CHECK (EMP_NOMBRE1 IS NOT NULL),
+	CONSTRAINT NN_APELLIDO1 CHECK (EMP_APELLIDO1 IS NOT NULL),
+	CONSTRAINT NN_CELULAR CHECK (EMP_CELULAR IS NOT NULL),
+	CONSTRAINT NN_DIRECCION CHECK (EMP_DIRECCION IS NOT NULL),
+	CONSTRAINT PK_EMPLEADO PRIMARY KEY (EMP_DOCUMENTO),
+	CONSTRAINT FK_TIPO_EMPLEADO_EMPLEADO FOREIGN KEY (tipo_id) REFERENCES distribuidora.tipo_empleado (tipo_id)
 );
 
-SELECT * FROM public.access;
+INSERT INTO distribuidora.empleado (EMP_DOCUMENTO,EMP_CODIGO,EMP_NOMBRE1,EMP_NOMBRE2,EMP_APELLIDO1,EMP_APELLIDO2,EMP_DIRECCION,EMP_SEXO,EMP_CELULAR,EMP_EMAIL,TIPO_ID)
+							VALUES ('1003125673','A23','andres','felipe','Guagliabgnoni','Picon','cra 45 - 32','M','3214563472','felipe@gmail.com','A0');
 
-INSERT INTO public.access(acce_document, acce_name1, acce_name2, acce_lastname1, 
-acce_lastname2, acce_address, acce_sex, acce_telephone_number, acce_email, acce_password,
-acce_state, emti_id)
-VALUES ('1004945023', 'JOSE', 'LEONARDO', 'QUINTERO', 'LEON', 'CRA 16 # 6A - 63', 'M', '3183843124', 
-		'jose@gmail.com', 'jose123','EA' ,1),
-		('1193223063', 'ANDRES', 'FELIPE', 'GUAGLIANONI', '', 'CALLE 1 # 4-32', 'M', '3167863081', 
-		'felipe@gmail.com', 'ADMIN123','EA',2),
-		('1193223062', 'JHON', 'DEIVY', 'RIVAS', 'OJEDA', 'CALLE 7 # 40-58', 'M', '3167863081', 
-		'rivas@gmail.com', 'rivas123', 'EA' ,3),
-		('1004892245', 'FERNANDO', 'JAVIER', 'ARENAZ', '', 'CALLE 2 # 54-21', 'M', '3145272741', 
-		'fernando@gmail.com', 'fernando123','EA',4);
-
-
---Tabla Auditoria_Usuario
-
-CREATE TABLE public.audi_access(
-	audi_Acce_Document VARCHAR(20),
-	audi_Acce_Name1 VARCHAR(30),--nombres
-	audi_Acce_Name2 VARCHAR(30),
-	audi_Acce_Lastname1 VARCHAR(30),--apellidos
-	audi_Acce_Lastname2 VARCHAR(30),
-	audi_Acce_Address VARCHAR(50),--direccion
-	audi_Acce_Sex CHAR(1),--sexo
-	audi_Acce_Telephone_Number VARCHAR(20),--numero de telefono
-	audi_Acce_Email VARCHAR(30),
-	audi_Acce_Password VARCHAR(250),
-	audi_Acce_State CHAR(2),--estado del empleado 
-	audi_Emti_Id INTEGER, --llave foranea de la tabla de cargo de empleado
-	audi_modification_date TIMESTAMP,
-	audi_Acce_user VARCHAR(45),
-	audi_Acce_accion char(1),
-	CONSTRAINT ck_audi_Acce_Sex CHECK (audi_Acce_Sex IN ('M','F','I')),
-	CONSTRAINT fk_audi_employees_title_access FOREIGN KEY (audi_Emti_Id) 
-	REFERENCES public.employees_title (Emti_Id)
-);	
-
--- FUNCION PARA LA AUDITORIA USUARIO
-CREATE FUNCTION PUBLIC.AUDI_ACCESS_FUNC() RETURNS TRIGGER AS $TRG_GRABAR_AUDI_ACCESS$
-DECLARE
-	BEGIN
-		IF (TG_OP = 'UPDATE') THEN
-			INSERT INTO PUBLIC.audi_access (audi_Acce_Document,audi_Acce_Name1,audi_Acce_Name2,audi_Acce_Lastname1,audi_Acce_Lastname2,audi_Acce_Address,audi_Acce_Sex,audi_Acce_Telephone_Number,audi_Acce_Email,audi_Acce_Password,audi_Acce_State,audi_Emti_Id,audi_modification_date,audi_Acce_user,audi_Acce_accion)
-			VALUES (OLD.Acce_Document,OLD.Acce_Name1,OLD.acce_name2,OLD.Acce_Lastname1,OLD.Acce_Lastname2,OLD.Acce_Address,OLD.Acce_Sex,OLD.Acce_Telephone_Number,OLD.Acce_Email,OLD.Acce_Password,OLD.Acce_State,OLD.Emti_Id,CURRENT_TIMESTAMP(0),CURRENT_USER,'U');
-			RETURN NEW;
-		ELSIF(TG_OP = 'DELETE') THEN
-			INSERT INTO PUBLIC.audi_access (audi_Acce_Document,audi_Acce_Name1,audi_Acce_Name2,audi_Acce_Lastname1,audi_Acce_Lastname2,audi_Acce_Address,audi_Acce_Sex,audi_Acce_Telephone_Number,audi_Acce_Email,audi_Acce_Password,audi_Acce_State,audi_Emti_Id,audi_modification_date,audi_Acce_user,audi_Acce_accion)
-			VALUES (OLD.Acce_Document,OLD.Acce_Name1,OLD.acce_name2,OLD.Acce_Lastname1,OLD.Acce_Lastname2,OLD.Acce_Address,OLD.Acce_Sex,OLD.Acce_Telephone_Number,OLD.Acce_Email,OLD.Acce_Password,OLD.Acce_State,OLD.Emti_Id,CURRENT_TIMESTAMP(0),CURRENT_USER,'D');
-			RETURN OLD;
-		END IF;
-	END;
-$TRG_GRABAR_AUDI_ACCESS$ LANGUAGE PLPGSQL;		
-
-CREATE TRIGGER TRG_GRABAR_AUDI_ACCESS BEFORE UPDATE OR DELETE ON PUBLIC.access
-	FOR EACH ROW EXECUTE PROCEDURE PUBLIC.AUDI_ACCESS_FUNC();
-
-		
---Tabla Producto
-
-CREATE TABLE public.produc(
-	Prod_reference INT,
-	Prod_Code_Plu VARCHAR(30),--Codigo plu
-	Prod_Description VARCHAR(200),--descripcion del producto
-	Prod_Available_Quantity INT,--cantidad disponible
-	Prod_Arrival_Price DECIMAL,--precio de llegada
-	Prod_Selling_Price DECIMAL,--precio de venta
-	prod_iva DECIMAL,-- precio del iva
-	CONSTRAINT nn_prod_reference CHECK (Prod_reference IS NOT NULL),
-	CONSTRAINT nn_Prod_Code_Plu CHECK (Prod_Code_Plu IS NOT NULL),
-	CONSTRAINT nn_Prod_Description CHECK (Prod_Description IS NOT NULL),
-	CONSTRAINT nn_Prod_Arrival_Price CHECK (Prod_Arrival_Price IS NOT NULL),
-	CONSTRAINT nn_Prod_Selling_Price CHECK (Prod_Selling_Price IS NOT NULL),
-	CONSTRAINT nn_Prod_iva CHECK (Prod_iva IS NOT NULL),
-	CONSTRAINT pk_produc PRIMARY KEY (Prod_reference,Prod_Code_Plu)
+CREATE TABLE distribuidora.factura_salida (
+	CONSECUTIVO_SALIDA SERIAL,
+	FECHA DATE,
+	CLIE_DOCUMENTO VARCHAR(15),
+	EMP_DOCUMENTO VARCHAR(15),
+	DESCUENTO DECIMAL,
+	TOTAL DECIMAL,
+	CONSTRAINT NN_FECHA CHECK (FECHA IS NOT NULL),
+	CONSTRAINT FK_CLIENTE_FACTURA_SALIDA FOREIGN KEY (CLIE_DOCUMENTO) REFERENCES distribuidora.cliente (CLIE_DOCUMENTO),
+	CONSTRAINT FK_EMPLEADO_FACTURA_SALIDA FOREIGN KEY (EMP_DOCUMENTO) REFERENCES distribuidora.empleado (EMP_DOCUMENTO),
+	CONSTRAINT PK_FACTURA_SALIDA PRIMARY KEY (CONSECUTIVO_SALIDA)
 );
-
-select * from public.produc;
-
-INSERT INTO public.produc (Prod_reference, prod_code_plu, prod_description,
-prod_available_quantity, prod_arrival_price, prod_selling_price, prod_iva)
-VALUES 	('2452','P01','POPETAS CARAMELO',7,2500,3000,1.19),
-		('2453','PO2','POPETAS MANTEQUILLA',10,2500,3500,1.19),
-		('2454','PO3','POPETAS BBQ',10,2500,3500,1.19),
-		('2455','PO4','POPETAS MIXTAS',10,2500,3500,1.19),
-		('2456','PO5','POPETAS BBQ FAMILIAR',10,3500,4500,1.19),
-		('2457','PO6','POPETAS CARAMELO FAMILIAR',10,3500,4500,1.19),
-		('2458','PO7','POPETAS MIXTAS FAMILIAR',10,3500,4500,1.19),
-		('2459','PO8','POPETAS MANTEQUILLA FAMILIAR',10,3500,4500,1.19)
-	;
-
---Tabla audi_Producto
-CREATE TABLE public.audi_produc(
-	audi_Prod_reference INT,
-	audi_Prod_Code_Plu VARCHAR(30),--Codigo plu
-	audi_Prod_Description VARCHAR(200),--descripcion del producto
-	audi_Prod_Available_Quantity INT,--cantidad disponible
-	audi_Prod_Arrival_Price DECIMAL,--precio de llegada
-	audi_Prod_Selling_Price DECIMAL,--precio de venta
-	audi_prod_iva DECIMAL,-- precio del iva
-	audi_modification_date TIMESTAMP,
-	audi_prod_user VARCHAR(45),
-	audi_prod_accion char(1)
+CREATE TABLE distribuidora.producto (
+	COD_PRODUCTO VARCHAR(5),
+	PROD_NOMBRE VARCHAR(40),
+	PROD_DESCRIPCION VARCHAR (100),
+	VALOR DECIMAL,
+	STOCK INTEGER,
+	ENTRADA INTEGER,
+	CONSTRAINT PK_PRODUCTO PRIMARY KEY (COD_PRODUCTO),
+	CONSTRAINT NN_NOMBRE CHECK (PROD_NOMBRE IS NOT NULL),
+	CONSTRAINT NN_DESCRIPCION CHECK (PROD_DESCRIPCION IS NOT NULL),
+	CONSTRAINT CK_VALOR CHECK (VALOR > 0)
 );
-
--- FUNCION PARA LA AUDITORIA USUARIO
-CREATE FUNCTION PUBLIC.AUDI_PRODUC_FUNC() RETURNS TRIGGER AS $TRG_GRABAR_AUDI_PRODUC$
-DECLARE
-	BEGIN
-		IF (TG_OP = 'UPDATE') THEN
-			INSERT INTO PUBLIC.audi_produc (audi_Prod_reference,audi_Prod_Code_Plu,audi_Prod_Description,audi_Prod_Available_Quantity,audi_Prod_Arrival_Price,audi_Prod_Selling_Price,audi_prod_iva,audi_modification_date,audi_prod_user,audi_prod_accion)
-			VALUES (OLD.Prod_reference,OLD.Prod_Code_Plu,OLD.Prod_Description,OLD.Prod_Available_Quantity,OLD.Prod_Arrival_Price,OLD.Prod_Selling_Price,OLD.prod_iva,CURRENT_TIMESTAMP(0),CURRENT_USER,'U');
-			RETURN NEW;
-		ELSIF(TG_OP = 'DELETE') THEN
-			INSERT INTO PUBLIC.audi_produc (audi_Prod_reference,audi_Prod_Code_Plu,audi_Prod_Description,audi_Prod_Available_Quantity,audi_Prod_Arrival_Price,audi_Prod_Selling_Price,audi_prod_iva,audi_modification_date,audi_prod_user,audi_prod_accion)
-			VALUES (OLD.Prod_reference,OLD.Prod_Code_Plu,OLD.Prod_Description,OLD.Prod_Available_Quantity,OLD.Prod_Arrival_Price,OLD.Prod_Selling_Price,OLD.prod_iva,CURRENT_TIMESTAMP(0),CURRENT_USER,'D');
-			RETURN OLD;
-		END IF;
-	END;
-$TRG_GRABAR_AUDI_PRODUC$ LANGUAGE PLPGSQL;		
-
-CREATE TRIGGER TRG_GRABAR_AUDI_PRODUC BEFORE UPDATE OR DELETE ON PUBLIC.produc
-	FOR EACH ROW EXECUTE PROCEDURE PUBLIC.AUDI_PRODUC_FUNC();
-
-CREATE TABLE public.cliente(
-	cliente_documento VARCHAR(20),
-	cliente_nombre VARCHAR(80),
-	cliente_correo VARCHAR(30),
-	cliente_sexo CHAR(1),
-	cliente_telefono VARCHAR(20),
-	cliente_direccion VARCHAR(40),
-	cliente_barrio VARCHAR(30),
-	cliente_nombre_negocio VARCHAR(50),
-	cliente_nit_negocio VARCHAR(30),
-	cliente_estado CHAR(2),
-	CONSTRAINT nn_cliente_documento CHECK (cliente_documento IS NOT NULL),
-	CONSTRAINT nn_cliente_nombre CHECK (cliente_nombre IS NOT NULL),
-	CONSTRAINT nn_cliente_correo CHECK (cliente_correo IS NOT NULL),
-	CONSTRAINT nn_cliente_sexo CHECK (cliente_sexo IS NOT NULL),
-	CONSTRAINT nn_cliente_telefono CHECK (cliente_telefono IS NOT NULL),
-	CONSTRAINT nn_cliente_direccion CHECK (cliente_direccion IS NOT NULL),
-	CONSTRAINT nn_cliente_barrio CHECK (cliente_barrio IS NOT NULL),
-	CONSTRAINT nn_cliente_nombre_negocio CHECK (cliente_nombre_negocio IS NOT NULL),
-	CONSTRAINT nn_cliente_nit_negocio CHECK (cliente_nit_negocio IS NOT NULL),
-	CONSTRAINT nn_cliente_estado CHECK (cliente_estado IS NOT NULL),
-	CONSTRAINT ck_cliente_sexo CHECK (cliente_sexo IN ('M','F','I')),
-	CONSTRAINT ck_cliente_estado CHECK (cliente_estado IN ('EA','ED')),
-	CONSTRAINT pk_cliente PRIMARY KEY(cliente_documento)
+CREATE TABLE distribuidora.detalle_salida (
+	CONSECUTIVO_SALIDA INTEGER,
+	ORDINAL VARCHAR (2),
+	COD_PRODUCTO VARCHAR(5),
+	CANTIDAD_VENTA INTEGER,
+	PRECIO_VENTA DECIMAL,
+	SUBTOTAL DECIMAL,
+	DESCUENTO DECIMAL,
+	VLR_DESCUENTO DECIMAL,
+	CONSTRAINT NN_ORDINAL CHECK (ORDINAL IS NOT NULL),
+	CONSTRAINT CK_CANTIDAD CHECK (CANTIDAD_VENTA > 0),
+	CONSTRAINT FK_PRODUCTO_DETALLE_SALIDA FOREIGN KEY (COD_PRODUCTO) REFERENCES distribuidora.producto (COD_PRODUCTO),
+	CONSTRAINT FK_FACTURA_SALIDA_DETALLE_SALIDA FOREIGN KEY (CONSECUTIVO_SALIDA) REFERENCES distribuidora.factura_salida (CONSECUTIVO_SALIDA),
+	CONSTRAINT PK_DETALLE_SALIDA PRIMARY KEY (CONSECUTIVO_SALIDA, ORDINAL)
 );
+CREATE TABLE distribuidora.factura_entrada (
+	CONSECUTIVO_ENTRADA SERIAL,
+	FECHA DATE,
+	EMP_DOCUMENTO VARCHAR(15),
+	DESCUENTO DECIMAL,
+	TOTAL DECIMAL,
+	CONSTRAINT NN_FECHA CHECK (FECHA IS NOT NULL),
+	CONSTRAINT FK_EMPLEADO_FACTURA_ENTRADA FOREIGN KEY (EMP_DOCUMENTO) REFERENCES distribuidora.empleado (EMP_DOCUMENTO),
+	CONSTRAINT PK_FACTURA_ENTRADA PRIMARY KEY (CONSECUTIVO_ENTRADA)
+);
+CREATE TABLE distribuidora.detalle_entrada (
+	CONSECUTIVO_ENTRADA INTEGER,
+	ORDINAL_ENTRADA VARCHAR (2),
+	COD_PRODUCTO VARCHAR(5),
+	CANTIDAD_VENTA INTEGER,
+	PRECIO_VENTA DECIMAL,
+	SUBTOTAL DECIMAL,
+	DESCUENTO DECIMAL,
+	VLR_DESCUENTO DECIMAL,
+	CONSTRAINT NN_ORDINAL CHECK (ORDINAL_ENTRADA IS NOT NULL),
+	CONSTRAINT CK_CANTIDAD CHECK (CANTIDAD_VENTA > 0),
+	CONSTRAINT FK_PRODUCTO_DETALLE_ENTRADA FOREIGN KEY (COD_PRODUCTO) REFERENCES distribuidora.producto (COD_PRODUCTO),
+	CONSTRAINT FK_FACTURA_ENTRADA_DETALLE_ENTRADA FOREIGN KEY (CONSECUTIVO_ENTRADA) REFERENCES distribuidora.factura_entrada (CONSECUTIVO_ENTRADA),
+	CONSTRAINT PK_DETALLE_ENTRADA PRIMARY KEY (CONSECUTIVO_ENTRADA, ORDINAL_ENTRADA)
+);
+CREATE FUNCTION distribuidora.subtotal() RETURNS TRIGGER AS $llenar_subtotal$
+DECLARE p numeric;
+d numeric;
+su numeric;
+vd numeric;
+BEGIN -- Chequear cantidad null
+IF NEW.cantidad_venta IS NULL THEN RAISE EXCEPTION '% Cantidad no puede ser nulo',
+NEW.cod_producto;
+END IF;
+SELECT valor into p
+FROM distribuidora.producto
+WHERE cod_producto = NEW.cod_producto;
+d := NEW.descuento / 100;
+su := NEW.cantidad_venta * p;
+vd := round((su * d), 2);
+NEW.precio_venta := p;
+NEW.subtotal := (su - vd);
+NEW.vlr_descuento := vd;
+RETURN NEW;
+END $llenar_subtotal$ LANGUAGE plpgsql;
+CREATE TRIGGER llenar_subtotal BEFORE
+INSERT
+	OR
+UPDATE ON distribuidora.detalle_salida FOR EACH ROW EXECUTE PROCEDURE distribuidora.subtotal();
+CREATE FUNCTION distribuidora.total() RETURNS trigger AS $llenar_total$
+declare sb numeric;
+de numeric;
+BEGIN
+select sum(subtotal),
+	sum(vlr_descuento) into sb,
+	de
+from distribuidora.detalle_salida
+where consecutivo_salida = NEW.consecutivo_salida;
+update distribuidora.factura_salida
+set total = sb,
+	descuento = de
+where consecutivo_salida = NEW.consecutivo_salida;
+RETURN NEW;
+END;
+$llenar_total$ LANGUAGE plpgsql;
+CREATE TRIGGER llenar_total
+AFTER
+INSERT
+	OR
+UPDATE ON distribuidora.detalle_salida FOR EACH ROW EXECUTE PROCEDURE distribuidora.total();
+CREATE TABLE distribuidora.audi_proveedor (
+	consecutivo_audi_proveedor SERIAL,
+	NIT VARCHAR(20),
+	NOMBRE VARCHAR (80),
+	DIRECCION VARCHAR(40),
+	CELULAR VARCHAR(15),
+	COD_PAIS VARCHAR(10),
+	COD_DEPARTAMENTO VARCHAR(10),
+	COD_CIUDAD VARCHAR(10),
+	CONSTRAINT PK_AUDI_PROVEEDOR PRIMARY KEY(consecutivo_audi_proveedor)
+);
+CREATE FUNCTION distribuidora.audi_proveedor_func() RETURNS trigger AS $trg_grabar_audi_proveedor$
+declare BEGIN IF (TG_OP = 'UPDATE') THEN
+INSERT INTO distribuidora.audi_proveedor (
+		consecutivo_audi_proveedor,
+		NIT,
+		NOMBRE,
+		DIRECCION,
+		CELULAR,
+		COD_PAIS,
+		COD_DEPARTAMENTO,
+		COD_CIUDAD
+	)
+VALUES (
+		default,
+		OLD.NIT,
+		OLD.NOMBRE,
+		OLD.DIRECCION,
+		OLD.CELULAR,
+		OLD.COD_PAIS,
+		OLD.COD_DEPARTAMENTO,
+		OLD.COD_CIUDAD
+	);
+RETURN NEW;
+ELSEIF (TG_OP = 'DELETE') THEN
+INSERT INTO distribuidora.audi_proveedor (
+		consecutivo_audi_proveedor,
+		NIT,
+		NOMBRE,
+		DIRECCION,
+		CELULAR
+	)
+VALUES (
+		default,
+		OLD.NIT,
+		OLD.NOMBRE,
+		OLD.DIRECCION,
+		OLD.CELULAR,
+		OLD.COD_PAIS,
+		OLD.COD_DEPARTAMENTO,
+		OLD.COD_CIUDAD
+	);
+RETURN OLD;
+END IF;
+END;
+$trg_grabar_audi_proveedor$ LANGUAGE plpgsql;
+CREATE TRIGGER trg_grabar_audi_proveedor BEFORE
+UPDATE
+	OR DELETE ON distribuidora.proveedor FOR EACH ROW EXECUTE PROCEDURE distribuidora.audi_proveedor_func();
+CREATE TABLE distribuidora.audi_producto (
+	consecutivo_audi_producto SERIAL,
+	COD_PRODUCTO VARCHAR(5),
+	PROD_NOMBRE VARCHAR(40),
+	PROD_DESCRIPCION VARCHAR (100),
+	VALOR DECIMAL,
+	STOCK INTEGER,
+	ENTRADA INTEGER,
+	CONSTRAINT PK_AUDI_PRODUCTO PRIMARY KEY (consecutivo_audi_producto)
+);
+CREATE FUNCTION distribuidora.audi_producto_func() RETURNS trigger AS $trg_grabar_audi_producto$
+declare BEGIN IF (TG_OP = 'UPDATE') THEN
+INSERT INTO distribuidora.audi_producto (
+		consecutivo_audi_producto,
+		COD_PRODUCTO,
+		PROD_NOMBRE,
+		PROD_DESCRIPCION,
+		VALOR,
+		STOCK,
+		ENTRADA
+	)
+VALUES (
+		default,
+		OLD.COD_PRODUCTO,
+		OLD.PROD_NOMBRE,
+		OLD.PROD_DESCRIPCION,
+		OLD.VALOR,
+		OLD.STOCK,
+		OLD.ENTRADA
+	);
+RETURN NEW;
+ELSEIF (TG_OP = 'DELETE') THEN
+INSERT INTO distribuidora.audi_producto (
+		consecutivo_audi_producto,
+		COD_PRODUCTO,
+		PROD_NOMBRE,
+		PROD_DESCRIPCION,
+		VALOR,
+		STOCK,
+		ENTRADA
+	)
+VALUES (
+		default,
+		OLD.COD_PRODUCTO,
+		OLD.PROD_NOMBRE,
+		OLD.PROD_DESCRIPCION,
+		OLD.VALOR,
+		OLD.STOCK,
+		OLD.ENTRADA
+	);
+RETURN OLD;
+END IF;
+END;
+$trg_grabar_audi_producto$ LANGUAGE plpgsql;
+CREATE TRIGGER trg_grabar_audi_producto BEFORE
+UPDATE
+	OR DELETE ON distribuidora.producto FOR EACH ROW EXECUTE PROCEDURE distribuidora.audi_producto_func();
+CREATE FUNCTION distribuidora.stock() RETURNS TRIGGER AS $actualizar_stock$
+DECLARE p numeric;
+BEGIN
+SELECT stock into p
+FROM distribuidora.producto
+WHERE cod_producto = NEW.cod_producto;
+p = new.entrada + new.stock;
+NEW.stock := p;
+RETURN NEW;
+END $actualizar_stock$ LANGUAGE plpgsql;
+CREATE TRIGGER actualizar_stock BEFORE
+INSERT
+	OR
+UPDATE ON distribuidora.producto FOR EACH ROW EXECUTE PROCEDURE distribuidora.stock();
+CREATE FUNCTION distribuidora.subtotal_entrada() RETURNS TRIGGER AS $llenar_subtotal_entrada$
+DECLARE p numeric;
+d numeric;
+su numeric;
+vd numeric;
+BEGIN -- Chequear cantidad null
+IF NEW.cantidad_venta IS NULL THEN RAISE EXCEPTION '% Cantidad no puede ser nulo',
+NEW.cod_producto;
+END IF;
+SELECT valor into p
+FROM distribuidora.producto
+WHERE cod_producto = NEW.cod_producto;
+d := NEW.descuento / 100;
+su := NEW.cantidad_venta * p;
+vd := round((su * d), 2);
+NEW.precio_venta := p;
+NEW.subtotal := (su - vd);
+NEW.vlr_descuento := vd;
+RETURN NEW;
+END $llenar_subtotal_entrada$ LANGUAGE plpgsql;
+CREATE TRIGGER llenar_subtotal_entrada BEFORE
+INSERT
+	OR
+UPDATE ON distribuidora.detalle_entrada FOR EACH ROW EXECUTE PROCEDURE distribuidora.subtotal_entrada();
+CREATE FUNCTION distribuidora.total_entrada() RETURNS trigger AS $llenar_total_entrada$
+declare sb numeric;
+de numeric;
+BEGIN
+select sum(subtotal),
+	sum(vlr_descuento) into sb,
+	de
+from distribuidora.detalle_entrada
+where consecutivo_entrada = NEW.consecutivo_entrada;
+update distribuidora.factura_entrada
+set total = sb,
+	descuento = de
+where consecutivo_entrada = NEW.consecutivo_entrada;
+RETURN NEW;
+END;
+$llenar_total_entrada$ LANGUAGE plpgsql;
+CREATE TRIGGER llenar_total_entrada
+AFTER
+INSERT
+	OR
+UPDATE ON distribuidora.detalle_entrada FOR EACH ROW EXECUTE PROCEDURE distribuidora.total_entrada();
 
-INSERT INTO public.cliente(cliente_documento,cliente_nombre,cliente_correo,cliente_sexo,cliente_telefono,cliente_direccion,cliente_barrio,cliente_nombre_negocio,cliente_nit_negocio,cliente_estado) 
-					VALUES	('165','JUAN SEBASTIAN ANGARITA','jsangarita@gmail.com','M','314758808','cra 16 # 6a - 63','el llano','Tienda la estrella','128756','EA'),
-							('1004563451','DIEGO ARMANDO','diegoarmando@gmail.com','M','3124576123','cra 13 # 4A-54','el landia','Tienda la pepita','5426234','EA'),
-							('1004899200','DIANY ISABEL GARCIA','dgarciac@gmail.com','F','31678921450','kda 32 $ 65 - 5B','el dorado','Tienda la esquina','2365234','EA')
-							;
 
+CREATE TABLE distribuidora.acceso (
+	ACCE_USUARIO VARCHAR (35) NOT NULL,
+	EMP_DOCUMENTO VARCHAR (15) NOT NULL,
+	ACCE_CONTRASENA VARCHAR (45) NOT NULL,
+	CONSTRAINT PK_ACCESO PRIMARY KEY (ACCE_USUARIO, EMP_DOCUMENTO),
+	CONSTRAINT FK_EMPLEADO_ACCESO FOREIGN KEY(EMP_DOCUMENTO) REFERENCES distribuidora.empleado(EMP_DOCUMENTO)
+);
+	INSERT INTO distribuidora.acceso 	(ACCE_USUARIO,EMP_DOCUMENTO,ACCE_CONTRASENA)
+								VALUES	('felipe42','1003125673','felipe123');
+
+CREATE TABLE distribuidora.SUMINISTRA(
+	sumi_id VARCHAR (10),
+	fecha DATE,
+	cod_producto VARCHAR (5),
+	nit VARCHAR (20),
+	CONSTRAINT PK_SUMINISTRA PRIMARY KEY (SUMI_ID, COD_PRODUCTO, NIT),
+	CONSTRAINT CK_FECHA check (FECHA IS NOT NULL),
+	CONSTRAINT FK_PRODUCTO_SUMINITRA FOREIGN KEY(COD_PRODUCTO) REFERENCES distribuidora.producto,
+	CONSTRAINT FK_PROVEEDOR_SUMINISTRA FOREIGN KEY(NIT) REFERENCES distribuidora.proveedor
+);

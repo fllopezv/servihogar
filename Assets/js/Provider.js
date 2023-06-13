@@ -1,8 +1,8 @@
-class ClientJs {
+class ProviderJs {
 
-    insertClient() {
-        var object = new FormData(document.querySelector('#inser_client'));
-        fetch('ClientController/insertClient', {
+    insertProvider() {
+        var object = new FormData(document.querySelector('#insert_proveedor'));
+        fetch('ProviderController/insertProvider', {
             method: 'POST',
             body: object
         })
@@ -24,7 +24,7 @@ class ClientJs {
                     Swal.fire({
                         icon: 'success',
                         title: 'EXITO',
-                        html: 'USUARIO REGISTRADO CON EXITO <br> LA VENTANA SE CERRARA EN <b></b>',
+                        html: 'PROVEEDOR REGISTRADO CON EXITO <br> LA VENTANA SE CERRARA EN <b></b>',
                         timer: 1000,
                         timerProgressBar: true,
                         didOpen: () => {
@@ -40,7 +40,7 @@ class ClientJs {
                     }).then((result) => {
                         /* Read more about handling dismissals below */
                         if (result.dismiss === Swal.DismissReason.timer) {
-                            console.log('USUARIO REGISTRADO CON EXITO')
+                            console.log('PROVEEDOR REGISTRADO CON EXITO')
                         }
                     })
 
@@ -53,32 +53,10 @@ class ClientJs {
             });
     }
 
-    showClient(id) {
-        var object = new FormData();
+    updateProvider() {
+        var object = new FormData(document.querySelector('#update_proveedor'));
 
-        object.append('id', id);
-
-        fetch('ClientController/showClient', {
-            method: 'POST',
-            body: object
-        })
-            .then((resp) => resp.text())
-            .then(function (response) {
-                $('#my_modal').modal('show');
-
-                document.querySelector('#modal_title').innerHTML = "Actualizar Cliente";
-
-                document.querySelector('#modal_content').innerHTML = response;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    updateClient() {
-        var object = new FormData(document.querySelector('#update_client'));
-
-        fetch('ClientController/updateClient', {
+        fetch('ProviderController/updateProvider', {
             method: 'POST',
             body: object
         })
@@ -97,7 +75,7 @@ class ClientJs {
                     Swal.fire({
                         icon: 'success',
                         title: 'EXITO',
-                        html: 'CLIENTE ACTUALIZADA CON EXITO <br> LA VENTANA SE CERRARA EN <b></b>',
+                        html: 'PROVEEDOR ACTUALIZADA CON EXITO <br> LA VENTANA SE CERRARA EN <b></b>',
                         timer: 1000,
                         timerProgressBar: true,
                         didOpen: () => {
@@ -113,7 +91,77 @@ class ClientJs {
                     }).then((result) => {
                         /* Read more about handling dismissals below */
                         if (result.dismiss === Swal.DismissReason.timer) {
-                            console.log('USUARIO DE ACCESO ACTUALIZADO CON EXITO')
+                            console.log('PROVEEDOR ACTUALIZADA CON EXITO')
+                        }
+                    })
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    showProvider(id) {
+        var object = new FormData();
+
+        object.append('id', id);
+
+        fetch('ProviderController/showProvider', {
+            method: 'POST',
+            body: object
+        })
+            .then((resp) => resp.text())
+            .then(function (response) {
+                $('#my_modal').modal('show');
+
+                document.querySelector('#modal_title').innerHTML = "Actualizar PROVEEDOR";
+
+                document.querySelector('#modal_content').innerHTML = response;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    updateProvider() {
+        var object = new FormData(document.querySelector('#update_provider'));
+
+        fetch('ProviderController/updateProvider', {
+            method: 'POST',
+            body: object
+        })
+            .then((resp) => resp.text())
+            .then(function (response) {
+                try {
+                    object = JSON.parse(response);
+                    Swal.fire({
+                        icon: "error",
+                        title: "ERROR",
+                        text: object.message,
+                    });
+                } catch (error) {
+                    document.querySelector('#content').innerHTML = response;
+                    let timerInterval
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'EXITO',
+                        html: 'PROVEEDOR ACTUALIZADA CON EXITO <br> LA VENTANA SE CERRARA EN <b></b>',
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: () => {
+                            Swal.showLoading()
+                            const b = Swal.getHtmlContainer().querySelector('b')
+                            timerInterval = setInterval(() => {
+                                b.textContent = Swal.getTimerLeft()
+                            }, 100)
+                        },
+                        willClose: () => {
+                            clearInterval(timerInterval)
+                        }
+                    }).then((result) => {
+                        /* Read more about handling dismissals below */
+                        if (result.dismiss === Swal.DismissReason.timer) {
+                            console.log('PROVEEDOR ACTUALIZADA CON EXITO')
                         }
                     })
                 }
@@ -124,8 +172,9 @@ class ClientJs {
     }
 
 
+
     Pais(id) {
-        var clien_pais = document.querySelector('#clie_departamento');
+        var clien_pais = document.querySelector('#cod_departamento');
         var object = new FormData();
         object.append("pais", id);
         //fetch("PaisController/showPais", {
@@ -148,13 +197,13 @@ class ClientJs {
     
         clien_pais.addEventListener('change', function () {
             const valor = clien_pais.value;
-            Client.ciudad(valor);
+            Provider.ciudad(valor);
         })
     
     }
 
     ciudad(id) {
-        let ciudadd = document.querySelector('#clie_ciudad');
+        let ciudadd = document.querySelector('#cod_ciudad');
         var object = new FormData();
         object.append("ciudad", id);
         fetch("CiudadController/listCiudad", {
@@ -176,7 +225,7 @@ class ClientJs {
     }
 
     u_Pais(id) {
-        var clien_pais = document.querySelector('#u_clie_departamento');
+        var clien_pais = document.querySelector('#u_proveedor_departamento');
         var object = new FormData();
         object.append("pais", id);
         //fetch("PaisController/showPais", {
@@ -199,13 +248,13 @@ class ClientJs {
     
         clien_pais.addEventListener('change', function () {
             const valor = clien_pais.value;
-            Client.u_ciudad(valor);
+            Provider.u_ciudad(valor);
         })
     
     }
 
     u_ciudad(id) {
-        let ciudadd = document.querySelector('#u_clie_ciudad');
+        let ciudadd = document.querySelector('#u_proveedor_ciudad');
         var object = new FormData();
         object.append("ciudad", id);
         fetch("CiudadController/listCiudad", {
@@ -227,4 +276,4 @@ class ClientJs {
     }
 
 }
-var Client = new ClientJs(); 
+var Provider = new ProviderJs();

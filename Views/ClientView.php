@@ -1,37 +1,88 @@
 <?php
+
 class ClientView
 {
-    function paginateClient($array_clients)
+    function paginateClient($array_client, $array_pais)
     {
-?>
 
+?>
         <div class="card">
-            <div class="card-header text-center bg-info text-black">
-                Registrar Cliente
+            <div class="card-header bg-secondary text-black text-justify">
+                REGISTRAR UN CLIENTE
             </div>
-            <br>
             <div class="card-body">
-                <form id="insert_client">
+                <form action="" id="inser_client">
                     <div class="row">
 
                         <div class="form-group col-md-6">
-                            <label for="">Documento</label>
-                            <input type="text" class="form-control" name="cliente_documento" id="cliente_documento" required>
+                            <label for="">DOCUMENTO</label>
+                            <input type="text" class="form-control" name="clie_documento" id="clie_documento" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Nombre</label>
-                            <input type="text" class="form-control" name="cliente_nombre" id="cliente_nombre" onkeypress="return sololetras(event);" required>
+                            <label for="">NOMBRE 1</label>
+                            <input type="text" class="form-control" name="clie_nombre1" id="clie_nombre1" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Correo</label>
-                            <input type="text" class="form-control" name="cliente_correo" id="cliente_correo" required>
+                            <label for="">NOMBRE 2</label>
+                            <input type="text" class="form-control" name="clie_nombre2" id="clie_nombre2" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Sexo</label>
-                            <select class="form-select" name="cliente_sexo" id="cliente_sexo" required>
+                            <label for="">APELLIDO 1</label>
+                            <input type="text" class="form-control" name="clie_apellido1" id="clie_apellido1" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">APELLIDO 2</label>
+                            <input type="text" class="form-control" name="clie_apellido2" id="clie_apellido2" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">PAIS</label>
+                            <select class="form-select" name="clie_pais" id="clie_pais" onchange="Client.Pais(this.value)">
+                                <option value="">Seleccione...</option>
+                                <?php
+                                if ($array_pais) {
+                                    foreach ($array_pais as $object_pais) {
+                                        $cod_pais = $object_pais->cod_pais;
+                                        $nombre_pais = $object_pais->nombre_pais;
+                                ?>
+                                        <option value="<?= $cod_pais ?>"><?= $nombre_pais ?></option>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <div class="">
+                                <label for="exampleSelectRounded0">DEPARTAMETO</code></label>
+                                <select class="form-select" id="clie_departamento" name="clie_departamento" onchange="Client.Departamento(this.value)">
+                                    <option>SELECCIONE...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <div class="">
+                                <label for="exampleSelectRounded0">CIUDAD</code></label>
+                                <select class="form-select" id="clie_ciudad" name="clie_ciudad" onchange="Client.ciudad(this.value)">
+                                    <option>SELECCIONE...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">DIRECCION</label>
+                            <input type="text" class="form-control" name="clie_direccion" id="clie_direccion" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">SEXO</label>
+                            <select class="form-select" name="clie_sexo" id="clie_sexo" required>
                                 <option value="">Seleccione...</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
@@ -40,47 +91,21 @@ class ClientView
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Telefono</label>
-                            <input type="text" class="form-control" name="cliente_telefono" id="cliente_telefono" required>
+                            <label for="">CELULAR</label>
+                            <input type="text" class="form-control" name="clie_celular" id="clie_celular" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Direccion</label>
-                            <input type="text" class="form-control" name="cliente_direccion" id="cliente_direccion" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Barrio</label>
-                            <input type="text" class="form-control" name="cliente_barrio" id="cliente_barrio" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Nombre negocio</label>
-                            <input type="text" class="form-control" name="cliente_nombre_negocio" id="cliente_nombre_negocio" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Nit negocio</label>
-                            <input type="text" class="form-control" name="cliente_nit_negocio" id="cliente_nit_negocio" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Estado</label>
-                            <select class="form-select" name="cliente_estado" id="cliente_estado" required>
-                                <option value="">Seleccione...</option>
-                                <option value="EA">Activo</option>
-                                <option value="ED">Desactivo</option>
-                            </select>
+                            <label for="">EMAIL</label>
+                            <input type="text" class="form-control" name="clie_email" id="clie_email" required>
                         </div>
 
                     </div>
-
-
                     <br>
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <button type="button" class="btn btn-primary float-right" onclick="Client.insertClient()">
-                                <i class="bi bi-cloud-upload">Guardar</i>
+                                <i> Guardar</i>
                             </button>
                         </div>
                     </div>
@@ -89,73 +114,60 @@ class ClientView
         </div>
 
         <div class="card">
-            <div class="card-header bg-info text-black text-center">
-                Listar Clientes
+            <div class="card-header bg-secondary text-black text-justify">
+                LISTAR CLIENTES
             </div>
             <div class="card-body">
-
-                <br>
-                <div class="search-bar">
-                    <form id="form_consulta_client" class="search-form align-items-center" method="POST" action="#">
-                        <div class="row mb-10">
-                            <div class="col-md-10">
-                                <input class="form-control" type="text" name="consult_client" id="consult_client" placeholder="Barra de busqueda" title="SE puede consultar por | documento , nombre , correo , telefono , nit negocio , nombre negocio |">
-                            </div>
-                            <div class="col-md-1">
-                                <button class="form-control " type="button" title="Consulta el cliente"><i class="bi bi-search" onclick="Client.consultClient()"></i></button>
-                            </div>
-                            <div class="col-md-1">
-                                <button class="form-control " type="button" title="Recargar"><i class="bi bi-arrow-counterclockwise" onclick="Menu.menu('ClientController/paginateClient')"></i></button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <br>
-
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
-                            <tr class=" text-center">
-                                <th>Documento</th>
-                                <th>Nombre</th>
-                                <th>Correo</th>
-                                <th>Sexo</th>
-                                <th>Telefono</th>
-                                <th>Direccion</th>
-                                <th>Barrio</th>
-                                <th>Nombre negocio</th>
-                                <th>Nit negocio</th>
-                                <th>Estado</th>
-                                <th style="text-align:center;">Acci&oacute;n</th>
+                            <tr class="text-justify">
+                                <th>DOCUMENTO</th>
+                                <th>NOMBRE 1</th>
+                                <th>NOMBRE 2</th>
+                                <th>APELLIDO 1</th>
+                                <th>APELLIDO 2</th>
+                                <th>DIRECCION</th>
+                                <th>SEXO</th>
+                                <th>CELULAR</th>
+                                <th>EMAIL</th>
+                                <th>PAIS</th>
+                                <th>DEPARTAMENTO</th>
+                                <th>CIUDAD</th>
+                                <th>ACCION</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            foreach ($array_clients as $object_client) {
-                                $cliente_documento = $object_client->cliente_documento;
-                                $cliente_nombre = $object_client->cliente_nombre;
-                                $cliente_correo = $object_client->cliente_correo;
-                                $cliente_sexo = $object_client->cliente_sexo;
-                                $cliente_telefono = $object_client->cliente_telefono;
-                                $cliente_direccion = $object_client->cliente_direccion;
-                                $cliente_barrio = $object_client->cliente_barrio;
-                                $cliente_nombre_negocio = $object_client->cliente_nombre_negocio;
-                                $cliente_nit_negocio = $object_client->cliente_nit_negocio;
-                                $cliente_estado = $object_client->cliente_estado;
+                            foreach ($array_client as $object_client) {
+                                $clie_documento = $object_client->clie_documento;
+                                $clie_nombre1 = $object_client->clie_nombre1;
+                                $clie_nombre2 = $object_client->clie_nombre2;
+                                $clie_apellido1 = $object_client->clie_apellido1;
+                                $clie_apellido2 = $object_client->clie_apellido2;
+                                $clie_direccion = $object_client->clie_direccion;
+                                $clie_sexo = $object_client->clie_sexo;
+                                $clie_celular = $object_client->clie_celular;
+                                $clie_email = $object_client->clie_email;
+                                $clie_pais = $object_client->nombre_pais;
+                                $clie_departamento = $object_client->nombre_departamento;
+                                $clie_ciudad = $object_client->nombre_ciudad;
                             ?>
-                                <tr class="text-center align-items-center">
-                                    <td> <?= $cliente_documento; ?> </td>
-                                    <td> <?= $cliente_nombre; ?> </td>
-                                    <td> <?= $cliente_correo; ?> </td>
-                                    <td> <?= $cliente_sexo; ?> </td>
-                                    <td> <?= $cliente_telefono; ?> </td>
-                                    <td> <?= $cliente_direccion; ?> </td>
-                                    <td> <?= $cliente_barrio; ?> </td>
-                                    <td> <?= $cliente_nombre_negocio; ?> </td>
-                                    <td> <?= $cliente_nit_negocio ?> </td>
-                                    <td> <?= $cliente_estado; ?> </td>
+                                <tr class="text-justify">
+                                    <td><?= $clie_documento ?></td>
+                                    <td><?= $clie_nombre1 ?></td>
+                                    <td><?= $clie_nombre2 ?></td>
+                                    <td><?= $clie_apellido1 ?></td>
+                                    <td><?= $clie_apellido2 ?></td>
+                                    <td><?= $clie_direccion ?></td>
+                                    <td><?= $clie_sexo ?></td>
+                                    <td><?= $clie_celular ?></td>
+                                    <td><?= $clie_email ?></td>
+                                    <td><?= $clie_pais ?></td>
+                                    <td><?= $clie_departamento ?></td>
+                                    <td><?= $clie_ciudad ?></td>
                                     <td style="text-align: center;">
-                                        <i class="bi bi-pencil-fill" onclick="Client.showClient('<?= $cliente_documento ?>')"></i>
+                                        <i class="bi bi-pencil-fill" onclick="Client.showClient('<?= $clie_documento ?>')"></i>
                                     </td>
                                 </tr>
                             <?php
@@ -166,47 +178,99 @@ class ClientView
                 </div>
             </div>
         </div>
-
     <?php
     }
-    function showClient($array_clients)
+    function showClient($array_client, $array_pais)
     {
-        $cliente_documento = $array_clients[0]->cliente_documento;
-        $cliente_nombre = $array_clients[0]->cliente_nombre;
-        $cliente_correo = $array_clients[0]->cliente_correo;
-        $cliente_sexo = $array_clients[0]->cliente_sexo;
-        $cliente_telefono = $array_clients[0]->cliente_telefono;
-        $cliente_direccion = $array_clients[0]->cliente_direccion;
-        $cliente_barrio = $array_clients[0]->cliente_barrio;
-        $cliente_nombre_negocio = $array_clients[0]->cliente_nombre_negocio;
-        $cliente_nit_negocio = $array_clients[0]->cliente_nit_negocio;
-        $cliente_estado = $array_clients[0]->cliente_estado;
+        $clie_documento = $array_client[0]->clie_documento;
+        $clie_nombre1 = $array_client[0]->clie_nombre1;
+        $clie_nombre2 = $array_client[0]->clie_nombre2;
+        $clie_apellido1 = $array_client[0]->clie_apellido1;
+        $clie_apellido2 = $array_client[0]->clie_apellido2;
+        $clie_direccion = $array_client[0]->clie_direccion;
+        $clie_sexo = $array_client[0]->clie_sexo;
+        $clie_celular = $array_client[0]->clie_celular;
+        $clie_email = $array_client[0]->clie_email;
+        $clie_pais = $array_client[0]->cod_pais;
+        $clie_departamento = $array_client[0]->cod_departamento;
+        $clie_ciudad = $array_client[0]->cod_ciudad;
     ?>
-
         <div class="card">
             <div class="card-body">
-                <form id="update_Client">
+                <form action="" id="update_client">
                     <div class="row">
 
+
                         <div class="form-group col-md-6">
-                            <label for="">Documento</label>
-                            <input type="text" class="form-control" name="cliente_documento" id="cliente_documento" value="<?= $cliente_documento ?>" required>
+                            <label for="">DOCUMENTO</label>
+                            <input type="text" class="form-control" name="clie_documento" id="clie_documento" value="<?= $clie_documento ?>" required readonly>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Nombre</label>
-                            <input type="text" class="form-control" name="cliente_nombre" id="cliente_nombre" value="<?= $cliente_nombre ?>" onkeypress="return sololetras(event);" required>
+                            <label for="">NOMBRE 1</label>
+                            <input type="text" class="form-control" name="clie_nombre1" id="clie_nombre1" value="<?= $clie_nombre1 ?>" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Correo</label>
-                            <input type="text" class="form-control" name="cliente_correo" id="cliente_correo" value="<?= $cliente_correo ?>" required>
+                            <label for="">NOMBRE 2</label>
+                            <input type="text" class="form-control" name="clie_nombre2" id="clie_nombre2" value="<?= $clie_nombre2 ?>" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Sexo</label>
-                            <select class="form-select" name="cliente_sexo" id="cliente_sexo" required>
+                            <label for="">APELLIDO 1</label>
+                            <input type="text" class="form-control" name="clie_apellido1" id="clie_apellido1" value="<?= $clie_apellido1 ?>" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">APELLIDO 2</label>
+                            <input type="text" class="form-control" name="clie_apellido2" id="clie_apellido2" value="<?= $clie_apellido2 ?>" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">PAIS</label>
+                            <select class="form-select" name="clie_pais" id="clie_pais" onchange="Client.u_Pais(this.value)">
                                 <option value="">Seleccione...</option>
+                                <?php
+                                if ($array_pais) {
+                                    foreach ($array_pais as $object_pais) {
+                                        $cod_pais = $object_pais->cod_pais;
+                                        $nombre_pais = $object_pais->nombre_pais;
+                                ?>
+                                        <option value="<?= $cod_pais ?>"><?= $nombre_pais ?></option>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <div class="">
+                                <label for="exampleSelectRounded0">DEPARTAMETO</code></label>
+                                <select class="form-select" id="u_clie_departamento" name="u_clie_departamento">
+                                    <option>SELECCIONE...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <div class="">
+                                <label for="exampleSelectRounded0">CIUDAD</code></label>
+                                <select class="form-select" id="u_clie_ciudad" name="u_clie_ciudad" onchange="Client.u_ciudad(this.value)">
+                                    <option>SELECCIONE...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">DIRECCION</label>
+                            <input type="text" class="form-control" name="clie_direccion" id="clie_direccion" value="<?= $clie_direccion ?>" required>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="">SEXO</label>
+                            <select class="form-select" name="clie_sexo" id="clie_sexo" required>
+                                <option value="<?= $clie_sexo ?>"><?= $clie_sexo ?></option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
                                 <option value="I">Indefinido</option>
@@ -214,42 +278,19 @@ class ClientView
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Telefono</label>
-                            <input type="text" class="form-control" name="cliente_telefono" id="cliente_telefono" value="<?= $cliente_telefono ?>" required>
+                            <label for="">CELULAR</label>
+                            <input type="text" class="form-control" name="clie_celular" id="clie_celular" value="<?= $clie_celular ?>" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="">Direccion</label>
-                            <input type="text" class="form-control" name="cliente_direccion" id="cliente_direccion" value="<?= $cliente_direccion ?>" required>
+                            <label for="">EMAIL</label>
+                            <input type="text" class="form-control" name="clie_email" id="clie_email" value="<?= $clie_email ?>" required>
                         </div>
 
-                        <div class="form-group col-md-6">
-                            <label for="">Barrio</label>
-                            <input type="text" class="form-control" name="cliente_barrio" id="cliente_barrio" value="<?= $cliente_barrio ?>" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Nombre negocio</label>
-                            <input type="text" class="form-control" name="cliente_nombre_negocio" id="cliente_nombre_negocio" value="<?= $cliente_nombre_negocio ?>" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Nit negocio</label>
-                            <input type="text" class="form-control" name="cliente_nit_negocio" id="cliente_nit_negocio" value="<?= $cliente_nit_negocio ?>" required>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <label for="">Estado</label>
-                            <select class="form-select" name="cliente_estado" id="cliente_estado" required>
-                                <option value="">Seleccione...</option>
-                                <option value="EA">Activo</option>
-                                <option value="ED">Desactivo</option>
-                            </select>
-                        </div>
 
                     </div>
                     <div class="col-md-12">
-                        <input type="hidden" id="id" name="id" value="<?= $cliente_documento ?>">
+                        <input type="hidden" id="id" name="id" value="<?= $clie_documento ?>">
                         <br>
                         <button type="button" class="btn btn-primary" onclick="Client.updateClient()">
                             <i class="bi bi-check-square">Guardar</i>
@@ -258,7 +299,6 @@ class ClientView
                 </form>
             </div>
         </div>
-
 <?php
     }
 }

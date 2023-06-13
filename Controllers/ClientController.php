@@ -5,316 +5,206 @@ require_once "Views/ClientView.php";
 
 class ClientController
 {
-
     function paginateClient()
     {
+        require_once "Models/PaisModel.php";
         $Connection = new Connection('sel');
         $ClientModel = new ClientModel($Connection);
+        $PaisModel = new PaisModel($Connection);
         $ClientView = new ClientView();
 
-        $array_clients = $ClientModel->listClient();
-        $ClientView->paginateClient($array_clients);
+        $array_client = $ClientModel->listClient();
+        $array_pais = $PaisModel->listPais();
+        $ClientView->paginateClient($array_client, $array_pais);
     }
 
     function insertClient()
     {
+        require_once "Models/PaisModel.php";
         $Connection = new Connection('sel');
         $ClientModel = new ClientModel($Connection);
+        $PaisModel = new PaisModel($Connection);
         $ClientView = new ClientView();
 
-        $cliente_documento = $_POST['cliente_documento'];
-        $cliente_nombre = $_POST['cliente_nombre'];
-        $cliente_correo = $_POST['cliente_correo'];
-        $cliente_sexo = $_POST['cliente_sexo'];
-        $cliente_telefono = $_POST['cliente_telefono'];
-        $cliente_direccion = $_POST['cliente_direccion'];
-        $cliente_barrio = $_POST['cliente_barrio'];
-        $cliente_nombre_negocio = $_POST['cliente_nombre_negocio'];
-        $cliente_nit_negocio = $_POST['cliente_nit_negocio'];
-        $cliente_estado = $_POST['cliente_estado'];
+        $clie_documento = $_POST['clie_documento'];
+        $clie_nombre1 = $_POST['clie_nombre1'];
+        $clie_nombre2 = $_POST['clie_nombre2'];
+        $clie_apellido1 = $_POST['clie_apellido1'];
+        $clie_apellido2 = $_POST['clie_apellido2'];
+        $clie_direccion = $_POST['clie_direccion'];
+        $clie_sexo = $_POST['clie_sexo'];
+        $clie_celular = $_POST['clie_celular'];
+        $clie_email = $_POST['clie_email'];
+        $clie_pais = $_POST['clie_pais'];
+        $clie_departamento = $_POST['clie_departamento'];
+        $clie_ciudad = $_POST['clie_ciudad'];
 
-        if (empty($cliente_documento)) {
+        if (empty($clie_documento)) {
             $response = ["message" => 'FALTA POR LLENAR EL DOCUMENTO'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_nombre)) {
-            $response = ["message" => 'FALTA POR LLENAR EL NOMBRE'];
+        if ($clie_documento<= 0) {
+            $response = ["message" => 'EL DOCUMENTO NO PUEDE SER MENOR QUE 0'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_correo)) {
-            $response = ["message" => 'FALTA POR LLENAR EL CORREO'];
+        if (!(filter_var($clie_email, FILTER_VALIDATE_EMAIL))) {
+            $response = ["message" => 'EMAIL INVALIDO '];
             exit(json_encode($response));
         }
-
-        if (empty($cliente_sexo)) {
-            $response = ["message" => 'FALTA POR LLENAR EL SEXO'];
+        if (empty($clie_nombre1)) {
+            $response = ["message" => 'FALTA POR LLENAR EL PRIMER NOMBRE'];
             exit(json_encode($response));
         }
-
-        if (empty($cliente_telefono)) {
-            $response = ["message" => 'FALTA POR LLENAR EL TELEFONO'];
+        if (empty($clie_apellido1)) {
+            $response = ["message" => 'FALTA POR LLENAR EL PRIMER APELLIDO'];
             exit(json_encode($response));
         }
-
-        if (empty($cliente_direccion)) {
+        
+        if (empty($clie_direccion)) {
             $response = ["message" => 'FALTA POR LLENAR LA DIRECCION'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_barrio)) {
-            $response = ["message" => 'FALTA POR LLENAR EL BARRIO'];
+        if (empty($clie_sexo)) {
+            $response = ["message" => 'FALTA POR LLENAR SEXO'];
+            exit(json_encode($response));
+        }
+        if (empty($clie_pais)) {
+            $response = ["message" => 'FALTA POR  LLENAR PAIS'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_nombre_negocio)) {
-            $response = ["message" => 'FALTA POR LLENAR EL NOMBRE DEL NEGOCIO'];
+        if (empty($clie_departamento)) {
+            $response = ["message" => 'FALTA POR  LLENAR DEPARTAMENTO'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_nit_negocio)) {
-            $response = ["message" => 'FALTA POR LLENAR EL NIT DEL NEGOCIO'];
+        if (empty($clie_ciudad)) {
+            $response = ["message" => 'FALTA POR  LLENAR CIUDAD'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_estado)) {
-            $response = ["message" => 'FALTA POR LLENAR EL ESTADO'];
+        if (empty($clie_celular)) {
+            $response = ["message" => 'FALTA POR  LLENAR EL CELULAR'];
             exit(json_encode($response));
         }
 
-        if (strlen($cliente_documento) > 80) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 80 CARACTERES EN EL NOMBRE'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_correo) > 30) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 30 CARACTERES EN EL CORREO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_telefono) > 20) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 20 CARACTERES EN EL TELEFONO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_direccion) > 40) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 40 CARACTERES EN LA DIRECCION'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_barrio) > 30) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 30 CARACTERES EN EL BARRIO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_nombre_negocio) > 50) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 50 CARACTERES EN EL NOMBRE DEL NEGOCIO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_nit_negocio) > 30) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 30 CARACTERES EN EL NIT DEL NEGOCIO'];
-            exit(json_encode($response));
-        }
-
-        $array_clients = $ClientModel->consultDocumentClient($cliente_documento);
+        $array_clients = $ClientModel->consultDocumentClient($clie_documento);
         if ($array_clients) {
             $response = ["message" => 'DOCUMENTO YA REGISTRADO'];
             exit(json_encode($response));
         }
+        
 
-        if (!(filter_var($cliente_correo, FILTER_VALIDATE_EMAIL))) {
-            $response = ["message" => 'EMAIL INVALIDO '];
-            exit(json_encode($response));
-        }
-
-        $array_clients = $ClientModel->consultCorreoClient($cliente_correo);
-        if ($array_clients) {
-            $response = ["message" => 'EMAIL YA REGISTRADO'];
-            exit(json_encode($response));
-        }
-
-        $array_clients = $ClientModel->consultTelefonoClient($cliente_telefono);
-        if ($array_clients) {
-            $response = ["message" => 'NUMERO YA REGISTRADO'];
-            exit(json_encode($response));
-        }
-
-        $array_clients = $ClientModel->consultNitNegocioClient($cliente_nit_negocio);
-        if ($array_clients) {
-            $response = ["message" => 'NIT YA REGISTRADO'];
-            exit(json_encode($response));
-        }
-
-        $ClientModel->insertClient($cliente_documento, $cliente_nombre, $cliente_correo, $cliente_sexo, $cliente_telefono, $cliente_direccion, $cliente_barrio, $cliente_nombre_negocio, $cliente_nit_negocio, $cliente_estado);
-        $array_clients = $ClientModel->listClient();
-        $ClientView->paginateClient($array_clients);
+        $ClientModel->insertClient($clie_documento, $clie_nombre1, $clie_nombre2, $clie_apellido1, $clie_apellido2, $clie_direccion, $clie_sexo, $clie_celular, $clie_email, $clie_pais, $clie_departamento, $clie_ciudad);
+        $array_client = $ClientModel->listClient();
+        $array_pais = $PaisModel->listpais();
+        $ClientView->paginateClient($array_client, $array_pais);
     }
 
     function showClient()
     {
+        require_once "Models/PaisModel.php";
         $Connection = new Connection('sel');
         $ClientModel = new ClientModel($Connection);
+        $PaisModel = new PaisModel($Connection);
         $ClientView = new ClientView();
-        $cliente_documento = $_POST['id'];
-        $array_clients = $ClientModel->selectClient($cliente_documento);
-        $ClientView->showClient($array_clients);
+
+        $clie_documento = $_POST['id'];
+        $array_client = $ClientModel->selectClient($clie_documento);
+        $array_pais = $PaisModel->listPais();
+        $ClientView->showClient($array_client, $array_pais);
     }
 
     function updateClient()
     {
+        require_once "Models/PaisModel.php";
         $Connection = new Connection('sel');
         $ClientModel = new ClientModel($Connection);
+        $PaisModel = new PaisModel($Connection);
         $ClientView = new ClientView();
 
-        $cliente_documento = $_POST['cliente_documento'];
-        $cliente_nombre = $_POST['cliente_nombre'];
-        $cliente_correo = $_POST['cliente_correo'];
-        $cliente_sexo = $_POST['cliente_sexo'];
-        $cliente_telefono = $_POST['cliente_telefono'];
-        $cliente_direccion = $_POST['cliente_direccion'];
-        $cliente_barrio = $_POST['cliente_barrio'];
-        $cliente_nombre_negocio = $_POST['cliente_nombre_negocio'];
-        $cliente_nit_negocio = $_POST['cliente_nit_negocio'];
-        $cliente_estado = $_POST['cliente_estado'];
+        $clie_documento = $_POST['clie_documento'];
+        $clie_nombre1 = $_POST['clie_nombre1'];
+        $clie_nombre2 = $_POST['clie_nombre2'];
+        $clie_apellido1 = $_POST['clie_apellido1'];
+        $clie_apellido2 = $_POST['clie_apellido2'];
+        $clie_direccion = $_POST['clie_direccion'];
+        $clie_sexo = $_POST['clie_sexo'];
+        $clie_celular = $_POST['clie_celular'];
+        $clie_email = $_POST['clie_email'];
+        $clie_pais = $_POST['clie_pais'];
+        $clie_departamento = $_POST['u_clie_departamento'];
+        $clie_ciudad = $_POST['u_clie_ciudad'];
 
-        if (empty($cliente_documento)) {
-            $response = ["message" => 'FALTA EL DOCUMENTO'];
+        if (empty($clie_documento)) {
+            $response = ["message" => 'FALTA POR LLENAR EL DOCUMENTO'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_nombre)) {
-            $response = ["message" => 'FALTA EL NOMBRE'];
+        if ($clie_documento<= 0) {
+            $response = ["message" => 'EL DOCUMENTO NO PUEDE SER MENOR QUE 0'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_correo)) {
-            $response = ["message" => 'FALTA EL CORREO'];
+        if (empty($clie_nombre1)) {
+            $response = ["message" => 'FALTA POR LLENAR EL PRIMER NOMBRE'];
+            exit(json_encode($response));
+        }
+        if (empty($clie_apellido1)) {
+            $response = ["message" => 'FALTA POR LLENAR EL PRIMER APELLIDO'];
+            exit(json_encode($response));
+        }
+        
+        if (empty($clie_direccion)) {
+            $response = ["message" => 'FALTA POR LLENAR LA DIRECCION'];
             exit(json_encode($response));
         }
 
-        if (empty($cliente_sexo)) {
-            $response = ["message" => 'FALTA EL SEXO'];
-            exit(json_encode($response));
-        }
-
-        if (empty($cliente_telefono)) {
-            $response = ["message" => 'FALTA EL TELEFONO'];
-            exit(json_encode($response));
-        }
-
-        if (empty($cliente_direccion)) {
-            $response = ["message" => 'FALTA LA DIRECCION'];
-            exit(json_encode($response));
-        }
-
-        if (empty($cliente_barrio)) {
-            $response = ["message" => 'FALTA EL BARRIO'];
-            exit(json_encode($response));
-        }
-
-        if (empty($cliente_nombre_negocio)) {
-            $response = ["message" => 'FALTA EL NOMBRE DEL NEGOCIO'];
-            exit(json_encode($response));
-        }
-
-        if (empty($cliente_nit_negocio)) {
-            $response = ["message" => 'FALTA EL NIT DEL NEGOCIO'];
-            exit(json_encode($response));
-        }
-
-        if (empty($cliente_estado)) {
-            $response = ["message" => 'FALTA EL ESTADO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_documento) > 80) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 80 CARACTERES EN EL NOMBRE'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_correo) > 30) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 30 CARACTERES EN EL CORREO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_telefono) > 20) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 20 CARACTERES EN EL TELEFONO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_direccion) > 40) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 40 CARACTERES EN LA DIRECCION'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_barrio) > 30) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 30 CARACTERES EN EL BARRIO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_nombre_negocio) > 50) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 50 CARACTERES EN EL NOMBRE DEL NEGOCIO'];
-            exit(json_encode($response));
-        }
-
-        if (strlen($cliente_nit_negocio) > 30) {
-            $response = ["message" => 'NO SE PUEDEN INGRESAR MAS DE 30 CARACTERES EN EL NIT DEL NEGOCIO'];
-            exit(json_encode($response));
-        }
-
-        if (!(filter_var($cliente_correo, FILTER_VALIDATE_EMAIL))) {
+        if (!(filter_var($clie_email, FILTER_VALIDATE_EMAIL))) {
             $response = ["message" => 'EMAIL INVALIDO '];
             exit(json_encode($response));
         }
 
-        $array_clients = $ClientModel->updateDocumentClientRepeat($cliente_documento);
-        if ($array_clients) {
-            $response = ["message" => 'DOCUMENTO YA REGISTRADO'];
+        if (empty($clie_sexo)) {
+            $response = ["message" => 'FALTA POR LLENAR SEXO'];
+            exit(json_encode($response));
+        }
+        if (empty($clie_email)) {
+            $response = ["message" => 'FALTA POR LLENAR EL CORREO'];
+            exit(json_encode($response));
+        }
+        
+        if (empty($clie_ciudad)) {
+            $response = ["message" => 'FALTA POR  LLENAR CIUDAD'];
             exit(json_encode($response));
         }
 
-        $array_clients = $ClientModel->updateCorreoClientRepeat($cliente_correo);
-        if ($array_clients) {
-            $response = ["message" => 'EMAIL YA REGISTRADO'];
+        if (empty($clie_pais)) {
+            $response = ["message" => 'FALTA POR  LLENAR PAIS'];
             exit(json_encode($response));
         }
 
-        $array_clients = $ClientModel->updateTelefonoClientRepeat($cliente_telefono);
-        if ($array_clients) {
-            $response = ["message" => 'NUMERO YA REGISTRADO'];
+        if (empty($clie_departamento)) {
+            $response = ["message" => 'FALTA POR  LLENAR DEPARTAMENTO'];
             exit(json_encode($response));
         }
 
-        $array_clients = $ClientModel->updateNitNegocioClientRepeat($cliente_nit_negocio);
-        if ($array_clients) {
-            $response = ["message" => 'NIT YA REGISTRADO'];
+        if (empty($clie_ciudad)) {
+            $response = ["message" => 'FALTA POR  LLENAR CIUDAD'];
             exit(json_encode($response));
         }
 
-        $array_clients = $ClientModel->updateClient($cliente_documento, $cliente_nombre, $cliente_correo, $cliente_sexo, $cliente_telefono, $cliente_direccion, $cliente_barrio, $cliente_nombre_negocio, $cliente_nit_negocio, $cliente_estado);
-        $array_clients = $ClientModel->listClient();
-        $ClientView->paginateClient($array_clients);
-    }
-
-    function consultClient()
-    {
-        $Connection = new Connection('sel');
-        $ClientModel = new ClientModel($Connection);
-        $ClientView = new ClientView();
-
-        $search_client = $_POST['consult_client'];
-        if (empty($search_client)) {
-            $response = ["message" => 'INGRESE UNA PALABRA CLAVE PARA BUSCAR'];
+        if (empty($clie_celular)) {
+            $response = ["message" => 'FALTA POR  LLENAR EL CELULAR'];
             exit(json_encode($response));
         }
-        $array_search_client = $ClientModel->consultClient($search_client);
-        $array_clients = $ClientModel->listClient();
-        if (!$array_search_client) {
-            $response = ["message" => 'EL CLIENTE SOLICITADO NO SE ENCUENTRA REGISTRADO EN EL SISTEMA O INGRESO MAL LOS VALORES DE BUSQUEDA'];
-            exit(json_encode($response));
-        }
-        $ClientView->paginateClient($array_search_client);
+        
+        $ClientModel->UpdateClient($clie_documento, $clie_nombre1, $clie_nombre2, $clie_apellido1, $clie_apellido2, $clie_direccion, $clie_sexo, $clie_celular, $clie_email, $clie_pais, $clie_departamento, $clie_ciudad);
+        $array_client = $ClientModel->listClient();
+        $array_pais = $PaisModel->listpais();
+        $ClientView->paginateClient($array_client, $array_pais);
     }
 }

@@ -1,5 +1,6 @@
 <?php
-class AdmProductModel
+
+class DepartamentoModel
 {
     private $Connection;
 
@@ -8,11 +9,9 @@ class AdmProductModel
         $this->Connection = $Connection;
     }
 
-
-    function listAdmProduct()
+    function listDepartamento($pais)
     {
-        $sql = "SELECT * FROM audi_produc";
-        //$sql = "SELECT * FROM audi_access";
+        $sql = "SELECT * FROM distribuidora.departamento WHERE cod_pais = '$pais'";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }

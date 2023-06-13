@@ -10,11 +10,11 @@ class MenuView
         <head>
             <meta charset="utf-8">
             <meta content="width=device-width, initial-scale=1.0" name="viewport">
-            <title>LEON DISTRIBUCIONES S.A.S</title>
+            <title>SERVIHOGAR</title>
             <meta content="" name="description">
             <meta content="" name="keywords">
             <!-- Favicons -->
-            <link href="assets/img/logo_leon.png" rel="icon">
+            <link href="assets/img/logo.png" rel="icon">
             <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
             <!-- Google Fonts -->
@@ -33,6 +33,7 @@ class MenuView
 
             <!-- Template Main CSS File -->
             <link href="assets/css/style.css" rel="stylesheet">
+            <link rel="stylesheet" href="assets/css/asd.css">
 
             <!-- =======================================================
   * Template Name: NiceAdmin - v2.2.2
@@ -49,19 +50,11 @@ class MenuView
 
                 <div class="d-flex align-items-center justify-content-between">
                     <a href="index.php" class="logo d-flex align-items-center">
-                        <img src="assets/img/logo_leon.png" alt="">
-                        <span class="d-none d-lg-block">Leon Distribuciones</span>
+                        <img src="assets/img/logo.png" alt="">
+                        <span class="d-none d-lg-block">SERVIHOGAR</span>
                     </a>
                     <i class="bi bi-list toggle-sidebar-btn"></i>
                 </div><!-- End Logo -->
-
-                <!-- <div class="search-bar">
-                    <form class="search-form d-flex align-items-center" method="POST" action="#">
-                        <input type="text" name="query" placeholder="asdasd" title="Enter search keyword">
-                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                    </form>
-                </div> -->
-                <!-- End Search Bar -->
 
                 <nav class="header-nav ms-auto">
                     <ul class="d-flex align-items-center">
@@ -72,53 +65,21 @@ class MenuView
                             </a>
                         </li><!-- End Search Icon-->
 
-                        <!-- <li class="nav-item">
-                            <a class="nav-link nav-icon" href="#" role="button" onclick="Menu.closeSession()">
-                                <i class="bi bi-power"></i>
-                            </a>
-                        </li> -->
-
                         <li class="nav-item dropdown pe-3">
 
                             <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                                 <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                                <span class="d-none d-md-block dropdown-toggle ps-2"> <?= $_SESSION['acce_name1']; ?> </span>
+                                <span class="d-none d-md-block dropdown-toggle ps-2"> <?= $_SESSION['acce_usuario']; ?> </span>
                             </a><!-- End Profile Iamge Icon -->
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                                 <li class="dropdown-header">
-                                    <h6><?= $_SESSION['acce_name1']; ?></h6>
-                                    <span><?= $_SESSION['acce_email']; ?></span>
+                                    <h6><?= $_SESSION['acce_usuario']; ?></h6>
+                                    <span> C.C. <?= $_SESSION['acce_documento']; ?></span>
                                 </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
 
-                                <!-- <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                        <i class="bi bi-person"></i>
-                                        <span>My Profile</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                                        <i class="bi bi-gear"></i>
-                                        <span>Account Settings</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                                        <i class="bi bi-question-circle"></i>
-                                        <span>Need Help?</span>
-                                    </a>
-                                </li> -->
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -147,116 +108,74 @@ class MenuView
                     <li class="nav-item">
                         <a class="nav-link " href="index.php">
                             <i class="bi bi-grid"></i>
-                            <span>INICIO</span>
+                            <span>Principal</span>
                         </a>
-                    </li><!-- End Dashboard Nav -->
-
-                    <?php
-                    if ($_SESSION['emti_id'] == 1) {
-                    ?>
-                        <li class="nav-tem">
-                            <a class="nav-link collapsed" data-bs-target="#administrador" data-bs-toggle="collapse" href="#">
-                                <i class="bi bi-exclamation-octagon-fill"></i><span class="text-danger">ADMINISTRADOR</span><i class="bi bi-chevron-down ms-auto"></i>
-                            </a>
-                            <ul id="administrador" class="nav-content collapse" data-bs-parent="siderbar-nav">
-                                <li>
-                                    <a href="#" onclick="Menu.menu('AdmPersonController/paginateAdmPerson')" class="nav-link">
-                                        <i class="bi bi-circle-fill"></i><span class="text-danger">ADM USUARIOS</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" onclick="Menu.menu('AdmProductController/paginateAdmProduct')" class="nav-link">
-                                        <i class="bi bi-circle-fill"></i><span class="text-danger">ADM PRODUCTOS</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    <?php
-                    }
-                    ?>
-
-                    <?php
-                    if (($_SESSION['emti_id'] == 2) or ($_SESSION['emti_id'] == 1)) {
-                    ?>
-                        <li class="nav-item">
-                            <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                                <i class="bi bi-menu-button-wide"></i><span>USUARIOS</span><i class="bi bi-chevron-down ms-auto"></i>
-                            </a>
-                            <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-
-                                <li>
-                                    <a href="#" onclick="Menu.menu('PersonController/paginatePerson')" class="nav-link">
-                                        <i class="bi bi-circle-fill"></i><span class="text-black">PERSONAS</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" onclick="Menu.menu('PositionController/paginatePosition')" class="nav-link">
-                                        <i class="bi bi-circle-fill"></i><span class="text-black">CARGOS</span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </li><!-- End Components Nav -->
-                    <?php
-                    }
-                    ?>
 
                     <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#clients-nav" data-bs-toggle="collapse" href="#">
-                            <i class="bi bi-menu-button-wide"></i><span>CLIENTES</span><i class="bi bi-chevron-down ms-auto"></i>
+                        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                            <i class="bi bi-menu-button-wide"></i><span>USUARIOS DEL SISTEMA</span><i class="bi bi-chevron-down ms-auto"></i>
                         </a>
-                        <ul id="clients-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                            <li>
-                                <a href="#" onclick="Menu.menu('ClientController/paginateClient')">
-                                    <i class="bi bi-circle"></i><span>LISTA DE CLIENTES</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-tem">
-                        <a class="nav-link collapsed" data-bs-target="#productos" data-bs-toggle="collapse" href="#">
-                            <i class="bi bi-menu-button-wide"></i><span>PRODUCTOS</span><i class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="productos" class="nav-content collapse" data-bs-parent="siderbar-nav">
-                            <li>
-
-                                <a href="#" onclick="Menu.menu('ProductController/paginateProduct')" class="nav-link">
-                                    <i class="bi bi-circle-fill"></i><span class="text-black">LISTA PRODUCTOS</span>
-                                </a>
-
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link collapsed" data-bs-target="#components-nav-factura" data-bs-toggle="collapse" href="#">
-                            <i class="bi bi-menu-button-wide"></i><span>FACTURAS</span><i class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="components-nav-factura" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
 
                             <li>
-                                <a href="#" onclick="Menu.menu('InvoiceController/paginateInvoice')" class="nav-link">
-                                    <i class="bi bi-circle-fill"></i><span class="text-black">Generar factura</span>
+                                <a href="#" onclick="Menu.menu('EmpleadoController/paginateEmpleado')" class="nav-link">
+                                    <i class="bi bi-circle-fill"></i><span class="text-black">EMPLEADOS</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="Menu.menu('InvoiceController/paginateInvoice')" class="nav-link">
-                                    <i class="bi bi-circle-fill"></i><span class="text-black">Consultar factura</span>
+                                <a href="#" onclick="Menu.menu('UserAccessController/paginateUserAccess')" class="nav-link">
+                                    <i class="bi bi-circle-fill"></i><span class="text-black">ACCESO</span>
                                 </a>
                             </li>
 
                         </ul>
                     </li><!-- End Components Nav -->
 
-                    <li class="nav-heading">Pages</li>
                     <li class="nav-item">
-                        <!-- <a href="#" onclick="Menu.menu('CountryController/paginateCountry')" class="nav-link"> -->
-                        <!-- <a href="/views/CountryView.php" class="nav-link"> -->
-                        <i class="bi bi-person"></i>
-                        <span>asd</span>
+                        <a class="nav-link collapsed" data-bs-target="#clientes" data-bs-toggle="collapse" href="#">
+                            <i class="bi bi-menu-button-wide"></i><span>CLIENTES</span><i class="bi bi-chevron-down ms-auto"></i>
                         </a>
-                    </li><!-- End Profile Page Nav -->
+                        <ul id="clientes" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                            <li>
+                                <a href="#" onclick="Menu.menu('ClientController/paginateClient')" class="nav-link">
+                                    <i class="bi bi-circle-fill"></i><span class="text-black">CLIENTES</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li><!-- End clientes -->
+
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#proveedor" data-bs-toggle="collapse" href="#">
+                            <i class="bi bi-menu-button-wide"></i><span>PROVEEDOR</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="proveedor" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                            <li>
+                                <a href="#" onclick="Menu.menu('ProviderController/paginateProvider')" class="nav-link">
+                                    <i class="bi bi-circle-fill"></i><span class="text-black">Proveedores</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li><!-- End proveedor -->
+
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#producto" data-bs-toggle="collapse" href="#">
+                            <i class="bi bi-menu-button-wide"></i><span>PRODUCTOS</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="producto" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                            <li>
+                                <a href="#" onclick="Menu.menu('ProductController/paginateProduct')" class="nav-link">
+                                    <i class="bi bi-circle-fill"></i><span class="text-black">Producto</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li><!-- End producto -->
+
 
                 </ul>
 
@@ -269,7 +188,7 @@ class MenuView
 
                         <div id="content">
 
-                            Contenido inicial
+                            <h1>SERVIHOGAR</h1>
 
                         </div>
 
@@ -329,10 +248,12 @@ class MenuView
             <!-- Template Main JS File -->
             <script src="assets/js/main.js"></script>
             <script src="assets/js/Menu.js"></script>
-            <script src="Assets/js/Person.js"></script>
-            <script src="assets/js/Position.js"></script>
-            <script src="assets/js/Product.js"></script>
+            <script src="assets/js/Empleado.js"></script>
+            <script src="assets/js/UserAccess.js"></script>
             <script src="assets/js/Client.js"></script>
+            <script src="assets/js/Provider.js"></script>
+            <script src="assets/js/Product.js"></script>
+
 
 
         </body>

@@ -1,4 +1,5 @@
 <?php
+
 class ClientModel
 {
     private $Connection;
@@ -10,116 +11,65 @@ class ClientModel
 
     function listClient()
     {
-        $sql = "SELECT * FROM public.cliente";
+        //$sql = "SELECT * FROM distribuidora.cliente";
+        $sql = "SELECT pr.* , pa.* , de.* , ci.* FROM
+        distribuidora.cliente pr,
+        distribuidora.pais pa,
+        distribuidora.departamento de,
+        distribuidora.ciudad ci
+        WHERE
+        pr.cod_pais = pa.cod_pais AND
+        pr.cod_departamento = de.cod_departamento AND
+        pr.cod_ciudad = ci.cod_ciudad
+        ";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
 
+  
 
-    //PARTE DE LAS VALIDACIONES AL INSERTAR ---- INICIO ----
-    function consultDocumentClient($cliente_documento)
+    function insertClient($clie_documento, $clie_nombre1, $clie_nombre2, $clie_apellido1, $clie_apellido2, $clie_direccion, $clie_sexo, $clie_celular, $clie_email, $clie_pais, $clie_departamento, $clie_ciudad)
     {
-        $sql = "SELECT * FROM cliente WHERE cliente_documento='$cliente_documento'";
+        $sql = "INSERT INTO distribuidora.cliente (clie_documento,clie_nombre1,clie_nombre2, clie_apellido1,clie_apellido2 ,clie_direccion ,clie_sexo ,clie_celular ,clie_email ,cod_pais ,cod_departamento ,cod_ciudad)
+                VALUES ('$clie_documento','$clie_nombre1','$clie_nombre2','$clie_apellido1','$clie_apellido2','$clie_direccion','$clie_sexo','$clie_celular','$clie_email','$clie_pais','$clie_departamento','$clie_ciudad')
+        ";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
 
-    function consultCorreoClient($cliente_correo)
+    function selectClient($clie_documento)
     {
-        $sql = "SELECT * FROM cliente WHERE cliente_correo='$cliente_correo'";
+        $sql = "SELECT * FROM distribuidora.cliente WHERE clie_documento = '$clie_documento'";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
 
-    function consultTelefonoClient($cliente_telefono)
+    function UpdateClient($clie_documento, $clie_nombre1, $clie_nombre2, $clie_apellido1, $clie_apellido2, $clie_direccion, $clie_sexo, $clie_celular, $clie_email, $clie_pais, $clie_departamento, $clie_ciudad)
     {
-        $sql = "SELECT * FROM cliente WHERE cliente_telefono='$cliente_telefono'";
+        $sql = "UPDATE distribuidora.cliente SET
+            clie_nombre1 = '$clie_nombre1',
+            clie_nombre2 = '$clie_nombre2',
+            clie_apellido1 = '$clie_apellido1',
+            clie_apellido2 = '$clie_apellido2',
+            clie_direccion = '$clie_direccion',
+            clie_sexo = '$clie_sexo',
+            clie_celular = '$clie_celular',
+            clie_email = '$clie_email',
+            cod_pais = '$clie_pais',
+            cod_departamento = '$clie_departamento',
+            cod_ciudad = '$clie_ciudad'
+            WHERE
+            clie_documento = '$clie_documento'
+        ";
+        $this->Connection->query($sql);
+    }
+
+    function consultDocumentClient($clie_documento)
+    {
+        $sql = "SELECT * FROM distribuidora.cliente WHERE clie_documento='$clie_documento'";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
 
-    function consultNitNegocioClient($cliente_nit_negocio)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente_nit_negocio='$cliente_nit_negocio'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-    //PARTE DE LAS VALIDACIONES AL INSERTAR ---- FIN ----
-
-    function insertClient($cliente_documento, $cliente_nombre, $cliente_correo, $cliente_sexo, $cliente_telefono, $cliente_direccion, $cliente_barrio, $cliente_nombre_negocio, $cliente_nit_negocio, $cliente_estado)
-    {
-        $sql = "INSERT INTO cliente (cliente_documento,cliente_nombre,cliente_correo,cliente_sexo,cliente_telefono,cliente_direccion,cliente_barrio,cliente_nombre_negocio,cliente_nit_negocio,cliente_estado) 
-                            VALUES ('$cliente_documento','$cliente_nombre','$cliente_correo','$cliente_sexo','$cliente_telefono','$cliente_direccion','$cliente_barrio','$cliente_nombre_negocio','$cliente_nit_negocio','$cliente_estado');";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function selectClient($cliente_documento)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente_documento = '$cliente_documento'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function updateClient($cliente_documento, $cliente_nombre, $cliente_correo, $cliente_sexo, $cliente_telefono, $cliente_direccion, $cliente_barrio, $cliente_nombre_negocio, $cliente_nit_negocio, $cliente_estado)
-    {
-        $sql = "UPDATE cliente SET
-     cliente_documento = '$cliente_documento',
-     ciente_nombre = '$cliente_nombre',
-     cliente_correo = '$cliente_correo',
-     cliente_sexo = '$cliente_sexo',
-     cliente_telefono = '$cliente_telefono',
-     cliente_direccion = '$cliente_direccion',
-     cliente_barrio = '$cliente_barrio',
-     cliente_nombre_negocio = '$cliente_nombre_negocio',
-     cliente_nit_negocio = '$cliente_nit_negocio',
-     cliente_estado = '$cliente_estado'
-     ";
-        $this->Connection->query($sql);
-    }
-
-    // PARTE DE VALIDACIONES DE ACTUALIZAR ---- INICIO ----
-
-    function updateDocumentClientRepeat($cliente_documento)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente_documento = '$cliente_documento'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function updateCorreoClientRepeat($cliente_correo)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente_correo = '$cliente_correo'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function updateTelefonoClientRepeat($cliente_telefono)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente_telefono = '$cliente_telefono'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function updateNitNegocioClientRepeat($cliente_nit_negocio)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente = '$cliente_nit_negocio'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    // PARTE DE VALIDACIONES DE ACTUALIZAR ---- FIN ----
-
-    function consultClient($search_client)
-    {
-        $sql = "SELECT * FROM cliente WHERE cliente_documento ='$search_client' OR
-                                            cliente_nombre='$search_client' OR
-                                            cliente_correo = '$search_client' OR
-                                            cliente_telefono = '$search_client' OR
-                                            cliente_nombre_negocio = '$search_client' OR
-                                            cliente_nit_negocio = '$search_client'
-                                            ";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
+    
 }

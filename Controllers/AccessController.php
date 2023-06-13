@@ -15,19 +15,19 @@ class AccessController
         $Connection=new Connection('sel');
         $AccessModel=new AccessModel($Connection);
          
-        $email=$array['email'];
+        $email=$array['usuario'];
         $password=$array['password'];
+
+        
 
 
         $array_access=$AccessModel->validateFormSession($email,$password);
 
         if($array_access)
         {
-            $_SESSION['acce_document']=$array_access[0]->acce_document;
+            $_SESSION['acce_documento']=$array_access[0]->emp_documento;
             $_SESSION['auth']='OK';
-            $_SESSION['acce_name1']=$array_access[0]->acce_name1;
-            $_SESSION['acce_email']=$array_access[0]->acce_email;
-            $_SESSION['emti_id']=$array_access[0]->emti_id;
+            $_SESSION['acce_usuario']=$array_access[0]->acce_usuario;
         }
         header('Location: index.php');
 

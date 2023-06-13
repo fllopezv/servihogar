@@ -20,8 +20,8 @@ class AccessView
             <meta content="" name="keywords">
 
             <!-- Favicons -->
-            <link href="assets/img/logo_leon.png" rel="icon">
-            <link href="assets/img/logo_leon.png" rel="apple-touch-icon">
+            <link href="assets/img/logo.png" rel="icon">
+            <link href="assets/img/logo.png" rel="apple-touch-icon">
 
             <!-- Google Fonts -->
             <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -59,10 +59,10 @@ class AccessView
 
                                     <div class="d-flex justify-content-center py-4">
                                         <a href="index.html" class="logo d-flex align-items-center w-auto">
-                                            <img src="assets/img/logo_leon.png" class="w-auto h-auto" alt="">
-                                            <span class="d-none d-lg-block">Leon Distribuciones S.A.S</span>
+                                            <img src="assets/img/logo.png" class="w-auto h-auto" alt="">
+                                            <span class="d-none d-lg-block">SERVIHOGAR</span>
                                         </a>
-                                    </div><!-- End Logo -->
+                                    </div><!-- End logo -->
 
                                     <div class="card mb-3">
 
@@ -70,17 +70,16 @@ class AccessView
 
                                             <div class="pt-4 pb-2">
                                                 <h5 class="card-title text-center pb-0 fs-4">¡Inicia sesion!</h5>
-                                                <p class="text-center small">Ingrese su email y contraseña</p>
+                                                <p class="text-center small">Ingrese su usuario y contraseña</p>
                                             </div>
 
                                             <form class="row g-3 needs-validation" action="" method="post" novalidate>
 
                                                 <div class="col-12">
-                                                    <label for="email" class="form-label">Correo</label>
+                                                    <label for="email" class="form-label">Usuario</label>
                                                     <div class="input-group has-validation">
-                                                        <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                                        <input type="email" name="email" class="form-control" id="email" required>
-                                                        <div class="invalid-feedback">Ingrese su correo.</div>
+                                                        <input type="text" name="usuario" class="form-control" id="usuario" required>
+                                                        <div class="invalid-feedback">Ingrese su usuario.</div>
                                                     </div>
                                                 </div>
 

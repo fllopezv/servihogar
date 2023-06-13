@@ -1,4 +1,4 @@
 <?php
-session_name('ING_SOFTWARE');
+session_name('Servihogar');
 session_start();
 ?>

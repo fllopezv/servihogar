@@ -1,5 +1,4 @@
 <?php
-require_once "../private_files_ing_software/setting_connection.php";
 
 class Connection
 {
@@ -8,23 +7,10 @@ class Connection
     
     function __construct($option)
     {
-        $ip=IP;
-        $data_base=DATA_BASE;
-        
-        if($option=='sel')
-        {
-            $user=USER_SEL;
-            $password=PASSWORD_SEL;
-        }
-        else if($option=='all')
-        {
-            $user=USER_ALL;
-            $password=PASSWORD_ALL;
-        }
-        else
-        {
-            exit('Falta la opciòn de conexiòn');
-        }
+        $ip="localhost";
+        $data_base="servihogar";
+        $user="postgres";
+        $password="123";
 
         try
         {

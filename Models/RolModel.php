@@ -1,5 +1,6 @@
 <?php
-class AdmPersonModel
+
+class RolModel
 {
     private $Connection;
 
@@ -8,12 +9,12 @@ class AdmPersonModel
         $this->Connection = $Connection;
     }
 
-
-    function listAdmPerson()
+    function listRol()
     {
-        $sql = "SELECT auac.*, et.* FROM audi_access auac , employees_title et WHERE ac.emti_id=et.emti_id";
-        $sql = "SELECT * FROM audi_access";
+
+        $sql = "SELECT * FROM distribuidora.tipo_empleado";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
+
     }
 }

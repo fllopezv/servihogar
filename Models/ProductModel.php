@@ -1,5 +1,4 @@
 <?php
-
 class ProductModel
 {
     private $Connection;
@@ -11,78 +10,43 @@ class ProductModel
 
     function listProduct()
     {
-        $sql = "SELECT * FROM produc";
+        $sql = "SELECT * FROM distribuidora.producto";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
 
-    function consultDescrip($prod_description)
+    function insertProduct($cod_producto, $prod_nombre, $prod_descripcion, $valor, $stock, $entrada)
     {
-        $sql = "SELECT * FROM produc WHERE prod_description='$prod_description'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function consultCodigoPlu($prod_code_plu)
-    {
-        $sql = "SELECT * FROM produc WHERE prod_code_plu='$prod_code_plu'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function consult_prod_code_plu($prod_code_plu)
-    {
-        $sql = "SELECT * FROM produc WHERE prod_code_plu = '$prod_code_plu'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function insertProduct($prod_reference, $prod_code_plu, $prod_description, $prod_available_quantity, $prod_arrival_price, $prod_selling_price, $prod_iva)
-    {
-        $sql = "INSERT INTO produc (prod_reference,prod_code_plu,prod_description,prod_available_quantity,prod_arrival_price,prod_selling_price,prod_iva)
-        VALUES                      ('$prod_reference','$prod_code_plu','$prod_description',$prod_available_quantity,$prod_arrival_price,$prod_selling_price,'$prod_iva');";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-
-    function updateProduct($prod_reference, $prod_code_plu, $prod_description, $prod_available_quantity, $prod_arrival_price, $prod_selling_price, $prod_iva)
-    {
-        $sql = "UPDATE produc SET
-                prod_description = '$prod_description',
-                prod_available_quantity = '$prod_available_quantity',
-                prod_arrival_price = '$prod_arrival_price',
-                prod_selling_price = '$prod_selling_price',
-                prod_iva = '$prod_iva'
-                WHERE prod_code_plu = '$prod_code_plu' AND
-                prod_reference = '$prod_reference'
+        $sql = "INSERT INTO distribuidora.producto  (cod_producto,prod_nombre,prod_descripcion,valor,stock,entrada)
+                VALUES  ('$cod_producto','$prod_nombre','$prod_descripcion','$valor','$stock','$entrada')
                 ";
         $this->Connection->query($sql);
+        return $this->Connection->fetchAll();
     }
 
-    function selectProduct($prod_code_plu)
+    function selectProduct($cod_producto)
     {
-        $sql = "SELECT * FROM produc WHERE prod_code_plu='$prod_code_plu' ";
+        $sql = "SELECT * FROM distribuidora.producto WHERE cod_producto = '$cod_producto'";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
 
-    function consultProduct($search_product)
+    function updateProduct($cod_producto, $prod_nombre, $prod_descripcion, $valor, $stock, $entrada)
     {
-        $sql = "SELECT * FROM produc WHERE prod_code_plu = '$search_product' OR prod_description LIKE '%$search_product%'";
+        $sql = "UPDATE distribuidora.producto SET
+        prod_nombre = '$prod_nombre',
+        prod_descripcion = '$prod_descripcion',
+        valor = '$valor',
+        stock = '$stock',
+        entrada = '$entrada'
+        WHERE
+        cod_producto = '$cod_producto'
+        ";
         $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
     }
 
-    function updateProductRepeat($prod_description)
-    {
-        $sql = "SELECT * FROM produc WHERE prod_description = '$prod_description'";
-        $this->Connection->query($sql);
-        return $this->Connection->fetchAll();
-    }
-    
-    function validateUpdateProduct($prod_code_plu,$prod_reference)
-    {
-        $sql = "SELECT * FROM produc WHERE prod_code_plu ='$prod_code_plu' AND Prod_reference = '$prod_reference'";
+    function consultProduct($cod_producto){
+        $sql = "SELECT * FROM distribuidora.producto WHERE cod_producto = '$cod_producto'";
         $this->Connection->query($sql);
         return $this->Connection->fetchAll();
     }
